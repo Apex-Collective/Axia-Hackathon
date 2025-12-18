@@ -25,7 +25,7 @@ export default function CountrySelect({
   className,
   placeholder = "Select a Country",
 }: CountrySelectProps) {
-  const [value, setValue] = useState("");
+  const [, setValue] = useState("");
   const options = useMemo(() => {
     return allCountries
       .filter((country) => {
@@ -44,7 +44,7 @@ export default function CountrySelect({
       .sort((a, b) => {
         if (a.priority && !b.priority) return -1;
         if (!a.priority && b.priority) return 1;
-        a.label.localeCompare(b.label);
+        return a.label.localeCompare(b.label);
       });
   }, [whitelist, blacklist, priorityOptions]);
 

@@ -1,5 +1,3 @@
-import { Link } from "react-router";
-
 export default function MagicLinkSent() {
   return (
     <div className="w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100 flex flex-col items-center text-center max-w-md">
@@ -14,7 +12,6 @@ export default function MagicLinkSent() {
 
       <div className="space-y-4 w-full">
         <a 
-          
           className="block w-full bg-brand-primary text-white font-medium py-2.5 rounded-lg hover:bg-brand-primary/90 transition-colors"
         >
           Send Magic Link
