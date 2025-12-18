@@ -41,7 +41,7 @@ export default function AuthLayout() {
             className="flex items-center p-4 text-brand-primary bg-white mt-7 rounded-xl"
           >
             <p>
-              Don't have an account? <strong>Sign up</strong>
+              Don't have a profile? <strong>Create profile now</strong>
             </p>
           </Link>
         ) : (
@@ -50,7 +50,7 @@ export default function AuthLayout() {
             className="flex items-center p-4 text-brand-primary bg-white mt-7 rounded-xl"
           >
             <p>
-              Already have an account? <strong>Login</strong>
+              Already have a profile? <strong>Login</strong>
             </p>
           </Link>
         )}
