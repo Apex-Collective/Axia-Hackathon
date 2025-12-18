@@ -1,39 +1,81 @@
-import { Field, FieldLegend, FieldDescription, FieldLabel, FieldGroup, FieldSet } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import CountrySelect from "@/components/CountrySelect";
+import { useState } from "react";
+import { toast } from "sonner";
+import { WizardLayout } from "@/components/onboarding/WizardLayout";
+import { Step1Origin } from "@/components/onboarding/Step1Origin";
+import { Step2Work } from "@/components/onboarding/Step2Work";
+import { Step3Intro } from "@/components/onboarding/Step3Intro";
 
 export default function SignUp() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    country: "",
+    jobTitle: "",
+    skills: "",
+    experience: "",
+    tools: "",
+    bio: ""
+  });
 
+  const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
+  const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
+
+  const updateData = (newData: any) => {
+    setFormData((prev) => ({ ...prev, ...newData }));
+  };
+
+  const handleFinalSubmit = () => {
+    console.log("Form Completed:", formData);
+    toast.success("Profile created successfully!");
+    // TODO: Add your navigation or API logic here
+  };
 
   return (
-    <form className="w-full bg-sky-500">
-      <FieldSet>
-      <FieldLabel>STEP 1 of 3</FieldLabel>
-      <FieldLegend>Hello! What's your origin story?</FieldLegend>
-        <FieldGroup>
-          <Field>
-            <FieldLabel htmlFor="full_name">Full name</FieldLabel>
-            <Input type="text" id="full_Name" />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="email_address">Email address</FieldLabel>
-            <Input type="text" id="email_address" />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="country">
-              Which country do you live in?
-            </FieldLabel>
-            <CountrySelect
-        className="w-[240px]"
-        // The value argument is the country ISO code (e.g., "US")
-        onChange={(value: string) => {
-          console.log("Selected Country Code:", value)
-        }}
-        placeholder="Select a Country"
-      />
-          </Field>
-        </FieldGroup>
-      </FieldSet>
-    </form>
+    <>
+      {step === 1 && (
+        <WizardLayout 
+          currentStep={1} 
+          totalSteps={3} 
+          title="Hello! What's your origin story?"
+        >
+          <Step1Origin 
+            data={formData} 
+            onUpdate={updateData} 
+            onNext={nextStep} 
+          />
+        </WizardLayout>
+      )}
+
+      {step === 2 && (
+        <WizardLayout 
+          currentStep={2} 
+          totalSteps={3} 
+          title="Love it! Tell us more about what you do."
+        >
+          <Step2Work 
+            data={formData} 
+            onUpdate={updateData} 
+            onNext={nextStep} 
+            onBack={prevStep}
+          />
+        </WizardLayout>
+      )}
+
+      {step === 3 && (
+        <WizardLayout 
+          currentStep={3} 
+          totalSteps={3} 
+          title="Almost there! How would you like to be intro'd?"
+        >
+          <Step3Intro 
+            data={formData} 
+            onUpdate={updateData} 
+            onSubmit={handleFinalSubmit} 
+            onBack={prevStep}
+          />
+        </WizardLayout>
+      )}
+    </>
   );
 }
