@@ -16,7 +16,7 @@ interface Step1Props {
 export function Step1Origin({ data, onUpdate, onNext }: Step1Props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate inputs
     if (!data.fullName) {
       toast.error("Please enter your full name");
@@ -39,23 +39,57 @@ export function Step1Origin({ data, onUpdate, onNext }: Step1Props) {
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="fullName">Full name</FieldLabel>
-          <Input 
-            id="fullName"
-            placeholder="Scott Owens"
-            value={data.fullName}
-            onChange={(e) => onUpdate({ fullName: e.target.value })}
-          />
+          <div className="relative">
+            <Input
+              id="fullName"
+              placeholder="Scott Owens"
+              value={data.fullName}
+              onChange={(e) => onUpdate({ fullName: e.target.value })}
+              className="pl-10"
+            />
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <img
+                src="/icons/auth_user_icon.svg"
+                alt="user"
+                className="size-5 opacity-50"
+              />
+            </div>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <img
+                src="/icons/help_icon.svg"
+                alt="user"
+                className="size-5 opacity-50"
+              />
+            </div>
+          </div>
         </Field>
-        
+
         <Field>
           <FieldLabel htmlFor="email">Email address</FieldLabel>
-          <Input 
-            id="email" 
-            type="email"
-            placeholder="scottowens@gmail.com"
-            value={data.email}
-            onChange={(e) => onUpdate({ email: e.target.value })}
-          />
+          <div className="relative">
+            <Input
+              id="email"
+              type="email"
+              placeholder="scottowens@gmail.com"
+              value={data.email}
+              onChange={(e) => onUpdate({ email: e.target.value })}
+              className="pl-10"
+            />
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+              <img
+                src="/icons/auth_mail_icon.svg"
+                alt="mail"
+                className="size-5 opacity-50"
+              />
+            </div>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <img
+                src="/icons/help_icon.svg"
+                alt="user"
+                className="size-5 opacity-50"
+              />
+            </div>
+          </div>
         </Field>
 
         <Field>
