@@ -1,18 +1,23 @@
-import { Outlet } from "react-router";
+import { Link, Outlet, useLocation } from "react-router";
 import { Toaster } from "@/components/ui/sonner"; //
 
 export default function AuthLayout() {
+  const location = useLocation();
+
+  const isLoginPage = location.pathname.includes("/login");
+
+  // const isMagicLinkPage = location.pathname.includes("magic-link");
   return (
     <main className="relative w-full min-h-screen bg-[#fcfcfd] flex items-center justify-center overflow-hidden font-sans">
       {/* Background images */}
       <div className="fixed flex items-center gap-10 opacity-50 z-0">
         <img
-          src="/images/auth_bg_img_2.jpg"
+          src="/images/auth_bg_img_2.svg"
           alt=""
           className="w-80 mr-20 pr-10 object-contain"
         />
         <img
-          src="/images/auth_bg_img_1.jpg"
+          src="/images/auth_bg_img_1.svg"
           alt=""
           className="w-80 object-contain mt-40"
         />
@@ -22,13 +27,33 @@ export default function AuthLayout() {
       <div className="relative z-10 flex flex-col items-center w-full max-w-lg p-4">
         <div className="mb-8">
           <img
-            src="/images/auth_logo.jpg"
+            src="/images/Logo.svg"
             alt="Apex Collective Logo"
             className="w-48 object-contain"
           />
         </div>
 
         <Outlet />
+
+        {isLoginPage ? (
+          <Link
+            to="/auth/signup"
+            className="flex items-center p-4 text-brand-primary bg-white mt-7 rounded-xl"
+          >
+            <p>
+              Don't have an account? <strong>Sign up</strong>
+            </p>
+          </Link>
+        ) : (
+          <Link
+            to="/auth/login"
+            className="flex items-center p-4 text-brand-primary bg-white mt-7 rounded-xl"
+          >
+            <p>
+              Already have an account? <strong>Login</strong>
+            </p>
+          </Link>
+        )}
       </div>
 
       {/* The Toaster Component */}

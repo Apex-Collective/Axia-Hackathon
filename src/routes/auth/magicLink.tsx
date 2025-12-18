@@ -21,9 +21,12 @@ export default function MagicLinkSent() {
         </a>
 
         <div
-          className="block w-65 mx-auto bg-indigo-500/70 border border-indigo-900 rounded-full p-3 text-sm text-indigo-800 hover:text-brand-primary transition-colors"
+          className="relative block w-65 mx-auto bg-[#f2ebff] border border-[#8044ef] rounded-full p-3 text-sm text-indigo-800 hover:text-brand-primary transition-colors"
         >
           Link expires in 15 minutes
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center">
+            <img src="/public/icons/people.svg" alt="people" className="size-7 opacity-50"/>
+          </div>
         </div>
       </div>
     </div>
