@@ -10,7 +10,7 @@ export default function AuthLayout() {
   return (
     <main className="relative w-full min-h-screen bg-[#fcfcfd] flex items-center justify-center overflow-hidden font-sans">
       {/* Background images */}
-      <div className="fixed flex items-center gap-10 opacity-50 z-0">
+      <div className="fixed flex items-center gap-10 z-0">
         <img
           src="/images/auth_bg_img_2.svg"
           alt=""

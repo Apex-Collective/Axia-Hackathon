@@ -22,7 +22,7 @@ export default function MagicLinkSent() {
         >
           Link expires in 15 minutes
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center">
-            <img src="/public/icons/people.svg" alt="people" className="size-7 opacity-50"/>
+            <img src="/icons/people.svg" alt="people" className="size-7 opacity-50"/>
           </div>
         </div>
       </div>
