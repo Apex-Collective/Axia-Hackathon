@@ -9,7 +9,7 @@ export default function MagicLinkSent() {
 
   const handleClick = () => {
     toast.success("Account Created", {
-      description: "Welcome to Apex Collective! We've sent a verification link to " + (formData.email || "your email")
+      description: "Welcome to Apex Collective! We've sent a verification link to " + ( email || "your email")
     });
     console.log(email);
   };
