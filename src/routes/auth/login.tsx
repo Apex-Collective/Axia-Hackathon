@@ -1,24 +1,23 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router"; 
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
 
 export default function Login() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email) {
-      toast.error("Please enter your email address");
+      toast.error("Email Required", {
+        description: "Please enter your email address to continue."
+      });
       return;
     }
-
-    console.log("Sending magic link to:", email);
-    toast.success("Magic Link Sent! Check the email you entered")
-    navigate("/auth/magic-link");
+    toast.success("Check your inbox", {
+      description: `We've sent a magic link to ${email}.`
+    });
   };
 
   return (

@@ -19,19 +19,27 @@ export function Step2Work({ data, onUpdate, onNext }: Step2Props) {
     e.preventDefault();
     
     if (!data.jobTitle) {
-      toast.error("Job title is required");
+      toast.error("Job Title Required", {
+        description: "Please enter your current job title."
+      });
       return;
     }
     if (!data.skills) {
-      toast.error("Skill is required");
+      toast.error("Skills Required", {
+        description: "Please list your key professional skills."
+      });
       return;
     }
     if (!data.experience) {
-      toast.error("Job title is required");
+      toast.error("Experience Required", {
+        description: "Please enter your years of professional experience."
+      });
       return;
     }
     if (!data.tools) {
-      toast.error("Tool is required");
+      toast.error("Tools Required", {
+        description: "Please list the tools you are proficient in."
+      });
       return;
     }
     

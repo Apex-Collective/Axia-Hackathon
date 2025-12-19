@@ -15,7 +15,9 @@ export function Step3Intro({ data, onUpdate, onSubmit }: Step3Props) {
     e.preventDefault();
     
     if (!data.bio || data.bio.trim().length === 0) {
-      toast.error("Please tell us a little about yourself");
+      toast.error("Bio Required", {
+        description: "Please write a short bio to introduce yourself."
+      });
       return;
     }
 
