@@ -34,8 +34,8 @@ export function Step3Intro({ data, onUpdate, onSubmit }: Step3Props) {
         <Field>
           <FieldLabel className="sr-only">Bio</FieldLabel>
           <textarea 
-            className="flex min-h-[150px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-            placeholder="Eg. Introduce yourself to mentees and let them know your experience in your field and how you can help!"
+            className="flex min-h-37.5 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+            placeholder="I am a product designer at Apple who writes about design, I love my doggie (oreo) and enjoy collecting new NFTs during my free time!"
             value={data.bio}
             onChange={(e) => onUpdate({ bio: e.target.value })}
           />

@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { Toaster } from "@/components/ui/sonner"; //
+import { Toaster } from "@/components/ui/sonner";
 
 export default function AuthLayout() {
   const location = useLocation();
@@ -9,6 +9,8 @@ export default function AuthLayout() {
   // const isMagicLinkPage = location.pathname.includes("magic-link");
   return (
     <main className="relative w-full min-h-screen bg-[#fcfcfd] flex items-center justify-center overflow-hidden font-sans">
+      {/* The Toaster Component */}
+      <Toaster />
       {/* Background images */}
       <div className="fixed flex items-center gap-10 z-0">
         <img
@@ -55,9 +57,6 @@ export default function AuthLayout() {
           </Link>
         )}
       </div>
-
-      {/* The Toaster Component */}
-      <Toaster />
     </main>
   );
 }
