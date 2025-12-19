@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bookmark, FileSearch } from 'lucide-react';
 
 // --- Types & Mock Data ---
