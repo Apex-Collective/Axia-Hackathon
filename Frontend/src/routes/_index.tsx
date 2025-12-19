@@ -28,7 +28,7 @@ export default function HomePage() {
             to="/dashboard"
             className="px-4 py-2 bg-brand-primary/40 text-white rounded-md hover:bg-brand-primary/70"
           >
-            Sign Up
+            Dashboard
           </Link>
         </div>
       </div>
