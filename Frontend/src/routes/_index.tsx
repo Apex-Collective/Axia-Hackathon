@@ -8,6 +8,7 @@ export default function HomePage() {
         <title>Axia Hackathon - Home</title>
         {/* If using SVG as favicon, ensure type is set correctly */}
         <link rel="icon" type="image/svg+xml" href="/images/Logo.svg" />
+        </Helmet>
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 space-y-4">
           <h1 className="text-4xl font-bold">Welcome to Apex Collective</h1>
           <div className="flex gap-4">
@@ -25,7 +26,7 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </Helmet>
+      
     </>
   );
 }
