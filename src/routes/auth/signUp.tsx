@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { WizardLayout } from "@/components/onboarding/WizardLayout";
 import { Step1Origin } from "@/components/onboarding/Step1Origin";
@@ -29,8 +28,7 @@ export default function SignUp() {
 
   const handleFinalSubmit = () => {
     console.log("Form Completed:", formData);
-    toast.success("Profile created! Sending magic link...");
-    navigate("/auth/magic-link");
+    navigate("/auth/magic-link", { state: { email: formData.email } });
   };
 
   return (

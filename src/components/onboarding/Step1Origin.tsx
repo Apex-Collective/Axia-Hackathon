@@ -19,15 +19,21 @@ export function Step1Origin({ data, onUpdate, onNext }: Step1Props) {
 
     // Validate inputs
     if (!data.fullName) {
-      toast.error("Please enter your full name");
+      toast.error("Full Name Required", {
+        description: "Please enter your full name to continue."
+      });
       return;
     }
     if (!data.email) {
-      toast.error("Please enter your email address");
+      toast.error("Email Required", {
+        description: "Please enter a valid email address."
+      });
       return;
     }
     if (!data.country) {
-      toast.error("Please select your country");
+      toast.error("Country Required", {
+        description: "Please select your country of residence."
+      });
       return;
     }
 
