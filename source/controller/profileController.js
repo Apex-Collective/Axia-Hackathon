@@ -18,7 +18,7 @@ exports.getMyProfile = async (req, res) => {
     try{
         const profile = await Profile.findOne({user: req.userId});
         if(!profile) res.status(404).json({message: 'Profile not found.'});
-        else res.status(200).json(profile);
+        res.status(200).json(profile);
     }catch(error){
         res.status(500).json({message: "Server error", error: error.message});
     }
@@ -47,4 +47,4 @@ exports.uploadPassport = async (req, res) => {
     }catch(error){
         res.status(500).json({message: 'Server error', error: error.message});
     }
-}
+};

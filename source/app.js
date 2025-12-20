@@ -1,4 +1,3 @@
-console.log('APP.JS LOADED 🚀');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -13,7 +12,6 @@ app.use(cors({
 }));
 
 app.use('/api', router);
-console.log('API ROUTES LOADED');
 
 app.get('/', (req, res) => {
     res.status(200).json({
