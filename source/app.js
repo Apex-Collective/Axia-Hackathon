@@ -1,9 +1,8 @@
+console.log('APP.JS LOADED 🚀');
 const express = require('express');
-const connectDB = require('./config/db');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
-const router = require('./routes/authRoutes');
+const router = require('./routes');
 
 const app = express();
 app.use(express.json());
@@ -12,6 +11,16 @@ app.use(cors({
     origin: process.env.FRONTEND_URL,
     credentials: true
 }));
+
 app.use('/api', router);
+console.log('API ROUTES LOADED');
+
+app.get('/', (req, res) => {
+    res.status(200).json({
+        message: "Axia Hackathon API is running",
+        status: "success",
+        timestamp: Date.now()
+    });
+});
 
 module.exports = app;

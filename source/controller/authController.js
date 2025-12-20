@@ -37,9 +37,6 @@ exports.requestMagicLink = async (req, res) => {
             return res.status(404).json({message: 'User not found.'});
         }
 
-        //const magicLink = `${process.env.BACKEND_URL}/verify?token=${token}&email=${email}`;
-        //const magicLink = `${process.env.FRONTEND_URL}/verify?token=${token}&email=${email}`;
-
         await sendMagicLink(user);
 
         res.status(200).json({message: 'Magic link sent to your email.'});
@@ -61,9 +58,9 @@ exports.verifyMagicLink = async (req, res) => {
             magicLinkTokenExpires: {$gt: Date.now()}
         });
 
-        console.log('received token:', token);
-        console.log('Hashed token:', hashed);
-        console.log('user found:', !!user);
+        // console.log('received token:', token);
+        // console.log('Hashed token:', hashed);
+        // console.log('user found:', !!user);
 
         if (!user) {
             return res.status(401).json({message: 'Invalid or expired magic link.'});
@@ -74,29 +71,13 @@ exports.verifyMagicLink = async (req, res) => {
 
         const accessToken = generateToken(user._id);
         await user.save();
-
+     
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
+            secure: true,
+            sameSite: 'strict',
             maxAge: 15 * 60 * 1000 //15 minutes
         });
-
-        
-
-        // res.cookie('accessToken', accessToken, {
-        //     httpOnly: true,
-        //     secure: true,
-        //     sameSite: 'strict',
-        //     maxAge: 15 * 60 * 1000 //15 minutes
-        // });
-
-        // res.cookie('refreshToken', refreshToken, {
-        //     httpOnly: true,
-        //     secure: true,
-        //     sameSite: 'strict',
-        //     maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
-        // });
 
         res.status(200).json({message: 'Profile verified successfully.'});
     }
