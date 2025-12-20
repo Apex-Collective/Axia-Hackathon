@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "This is the backend for Apex Collective, a platform that helps talents build profiles showing their skills, experiences, and career higlights, allowing recruiters to find and connect with them easily. The backend is built using Node.js with Express framework and MongoDb as the database.",
   "dependencies": {
+    "cloudinary": "^2.8.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -20,9 +21,19 @@
     "express-validator": "^7.3.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.2",
-    "nodemailer": "^7.0.11"
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.11",
+    "streamifier": "^0.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Apex-Collective/Axia-Hackathon.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Apex-Collective/Axia-Hackathon/issues"
+  },
+  "homepage": "https://github.com/Apex-Collective/Axia-Hackathon#readme"
 }
