@@ -66,14 +66,14 @@ export default function ProfileHeader() {
             </div>
 
             {/* Edit Profile Button */}
-            <button className="bg-[#0F1115] text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-black transition-colors w-full md:w-auto">
+            <button className="bg-[#0F1115] text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-black transition-colors w-full md:w-auto cursor-pointer">
               Edit Profile
             </button>
           </div>
         </div>
 
         {/* RIGHT CARD: Gamification / Rank */}
-        <div className="lg:col-span-1 bg-[#2E1035] rounded-2xl p-6 flex flex-col justify-between min-h-55 relative overflow-hidden">
+        <div className="lg:col-span-1 bg-[#2E1035] rounded-2xl p-6 flex flex-col justify-between h-35 relative overflow-hidden">
           <div className="flex justify-between items-start relative z-10">
             <div>
               <p className="text-gray-300 text-xs mb-2">
@@ -104,17 +104,6 @@ export default function ProfileHeader() {
           <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-500/20 blur-3xl rounded-full pointer-events-none"></div>
         </div>
       </div>
-
-      {/* --- Section 5: Recommended Jobs --- */}
-      {/* <div className="mt-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Recommended Jobs
-        </h2>
-        Placeholder for the cut-off text in the image
-        <p className="text-gray-500 text-sm">
-          Jobs where you're a top applicant based on your profile job search...
-        </p>
-      </div> */}
     </div>
   );
 }

@@ -6,6 +6,7 @@ interface TabItem {
   path: string; // The URL path this tab links to
   activeIcon?: string; // Image path for active state
   inactiveIcon?: string; // Image path for inactive state
+  publicProfilePath?: string;
 }
 
 interface ContentTabsProps {
@@ -15,6 +16,7 @@ interface ContentTabsProps {
 
 export function ContentTabs({ tabs, className }: ContentTabsProps) {
   const location = useLocation();
+  const publicProfile = tabs.find((tab) => tab.publicProfilePath);
 
   return (
     <div
@@ -50,7 +52,7 @@ export function ContentTabs({ tabs, className }: ContentTabsProps) {
                   className="w-full h-full object-contain"
                 />
               ) : (
-                /* Show Inactive Icon if isActive is false */
+                // Show Inactive Icon if isActive is false
                 <img
                   src={tab.inactiveIcon}
                   alt={tab.label}
@@ -63,6 +65,9 @@ export function ContentTabs({ tabs, className }: ContentTabsProps) {
           </Link>
         );
       })}
+      <Link to={`${publicProfile}`} className="text-pink-500">
+        View Public Profile
+      </Link>
     </div>
   );
 }

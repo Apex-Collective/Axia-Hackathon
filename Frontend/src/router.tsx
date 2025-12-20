@@ -7,6 +7,7 @@ import HomePage from "./routes/_index";
 import DashboardLayout from "./routes/dashboard/layout";
 import DashboardHomePage from "./routes/dashboard/page";
 import DashboardDiscoverPage from "./routes/dashboard/discover";
+import DashboardProfilePage from "./routes/dashboard/profile";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardHomePage /> },
       { path: "discover", element: <DashboardDiscoverPage /> },
+      { path: "profile", element: <DashboardProfilePage /> },
     ],
   },
   {
