@@ -58,10 +58,6 @@ exports.verifyMagicLink = async (req, res) => {
             magicLinkTokenExpires: {$gt: Date.now()}
         });
 
-        // console.log('received token:', token);
-        // console.log('Hashed token:', hashed);
-        // console.log('user found:', !!user);
-
         if (!user) {
             return res.status(401).json({message: 'Invalid or expired magic link.'});
         }
