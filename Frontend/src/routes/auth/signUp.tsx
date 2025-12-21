@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 import { WizardLayout } from "@/components/onboarding/WizardLayout";
 import { Step1Origin } from "@/components/onboarding/Step1Origin";
 import { Step2Work } from "@/components/onboarding/Step2Work";
 import { Step3Intro } from "@/components/onboarding/Step3Intro";
+import { api, type RegisterPayload } from "@/services/api";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -26,9 +30,37 @@ export default function SignUp() {
     setFormData((prev) => ({ ...prev, ...newData }));
   };
 
-  const handleFinalSubmit = () => {
-    console.log("Form Completed:", formData);
-    navigate("/auth/magic-link", { state: { email: formData.email } });
+  const handleFinalSubmit = async () => {
+    setIsSubmitting(true);
+
+    // Map your form state to the API expected format
+    const payload: RegisterPayload = {
+      name: formData.fullName,
+      email: formData.email,
+      country: formData.country,
+      role: formData.jobTitle,
+      skills: formData.skills,
+      yearsOfExperience: formData.experience,
+      tools: formData.tools,
+      introduction: formData.bio,
+    };
+
+    try {
+      await api.auth.register(payload);
+      
+      toast.success("Account Created", {
+        description: "Please check your email to verify your profile."
+      });
+      
+      navigate("/auth/magic-link", { state: { email: formData.email } });
+      
+    } catch (error: any) {
+      toast.error("Registration Failed", {
+        description: error.message || "An error occurred during registration."
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -73,6 +105,10 @@ export default function SignUp() {
             onUpdate={updateData}
             onSubmit={handleFinalSubmit}
             onBack={prevStep}
+            // Passing isLoading if your Step3Intro component supports a loading prop for the button
+            // If not, it will simply ignore this prop without breaking.
+            // @ts-ignore 
+            isLoading={isSubmitting}
           />
         </WizardLayout>
       )}

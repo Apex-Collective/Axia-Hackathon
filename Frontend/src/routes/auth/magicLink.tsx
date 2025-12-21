@@ -1,17 +1,33 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router";
 import { X } from "lucide-react";
 import { toast } from "sonner";
+import { api } from "@/services/api";
 
 export default function MagicLinkSent() {
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+  
   // Retrieve the email from state, fallback if accessed directly
-  const email = location.state?.email || "your email";
+  const email = location.state?.email || "";
 
-  const handleClick = () => {
-    toast.success("Account Created", {
-      description: "Welcome to Apex Collective! We've sent a verification link to " + ( email || "your email")
-    });
-    console.log(email);
+  const handleClick = async () => {
+    if (!email) {
+      toast.error("Error", { description: "No email address found to resend link." });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await api.auth.requestMagicLink(email);
+      toast.success("Link Resent", {
+        description: "We've sent a new verification link to " + email
+      });
+    } catch (error: any) {
+      toast.error("Error", { description: "Could not resend link." });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -36,9 +52,10 @@ export default function MagicLinkSent() {
           <button
             onClick={handleClick}
             type="button"
+            disabled={isLoading}
             className="block w-full bg-brand-primary text-white font-medium py-2.5 rounded-lg hover:bg-brand-primary/90 transition-colors cursor-pointer"
           >
-            Send Magic Link
+            {isLoading ? "Sending..." : "Send Magic Link"}
           </button>
 
           <div className="relative block w-65 mx-auto bg-[#fef5e7] border border-[#f59e0b] rounded-full p-3 text-sm text-[#f59e0b] hover:text-brand-primary transition-colors">
