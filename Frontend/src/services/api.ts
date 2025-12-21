@@ -1,13 +1,14 @@
 const BASE_URL = "https://axia-hackathon.onrender.com/api";
 
 // --- Types & Interfaces ---
+
 export interface RegisterPayload {
   name: string;
   email: string;
   country: string;
   role: string;
-  skills: string; 
-  yearsOfExperience: string; 
+  skills: string;
+  yearsOfExperience: string;
   tools: string;
   introduction: string;
 }
@@ -19,7 +20,7 @@ export interface ProfilePayload {
     country: string;
     jobTitle: string;
     yearsOfExperience: number;
-    tools: string[]; 
+    tools: string[];
     desiredSalary: string;
     availabilityHoursPerWeek: number;
     bio: string;
@@ -27,187 +28,137 @@ export interface ProfilePayload {
 }
 
 // --- Helper for Headers ---
+
 const getHeaders = (token?: string, isFormData = false): HeadersInit => {
   const headers: HeadersInit = {};
+  // We still send the Bearer token just in case they fix the middleware later
   if (token) headers["Authorization"] = `Bearer ${token}`;
   if (!isFormData) headers["Content-Type"] = "application/json";
   return headers;
 };
 
-// --- Logger Helper (Acts like Postman Console) ---
-const logRequest = (name: string, url: string, method: string, body: any) => {
-  console.group(`🚀 API REQUEST: ${name}`);
-  console.log(`URL: ${url}`);
-  console.log(`Method: ${method}`);
-  if(body) console.log("Payload:", body);
-  console.groupEnd();
-};
-
-const logResponse = (name: string, status: number, data: any) => {
-  const color = status >= 400 ? "color: red; font-weight: bold;" : "color: green; font-weight: bold;";
-  console.group(`%c📩 API RESPONSE: ${name} (${status})`, color);
-  console.log("Data:", data);
-  console.groupEnd();
-};
-
 // --- API Client ---
+
 export const api = {
   auth: {
     register: async (data: RegisterPayload) => {
-      // 1. Prepare Data
+      // 1. Convert Data to Backend Types (Arrays/Numbers)
       const payload = {
         ...data,
         yearsOfExperience: parseInt(data.yearsOfExperience) || 0,
-        skills: data.skills.includes(",") ? data.skills.split(",").map(s => s.trim()) : [data.skills],
-        tools: data.tools.includes(",") ? data.tools.split(",").map(s => s.trim()) : [data.tools]
+        skills: data.skills.includes(",")
+          ? data.skills.split(",").map((s) => s.trim())
+          : [data.skills],
+        tools: data.tools.includes(",")
+          ? data.tools.split(",").map((s) => s.trim())
+          : [data.tools],
       };
 
-      const url = `${BASE_URL}/register`;
-      
-      // 2. Log Request
-      logRequest("Register", url, "POST", payload);
+      // 2. Log for debugging
+      console.log("🚀 Register Payload:", payload);
 
-      const res = await fetch(url, {
+      const res = await fetch(`${BASE_URL}/register`, {
         method: "POST",
         headers: getHeaders(),
-        credentials: "include",
+        credentials: "include", // REQUIRED: Backend reads req.cookies.accessToken
         body: JSON.stringify(payload),
       });
-
-      // 3. Log & Handle Response
-      const json = await handleResponse(res, "Register");
-      return json;
+      return handleResponse(res);
     },
 
     login: async (email: string) => {
-      const url = `${BASE_URL}/login`;
-      const payload = { email };
-      
-      logRequest("Login", url, "POST", payload);
-
-      const res = await fetch(url, {
+      const res = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: getHeaders(),
         credentials: "include",
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ email }),
       });
-
-      return handleResponse(res, "Login");
+      return handleResponse(res);
     },
 
     requestMagicLink: async (email: string) => {
-      const url = `${BASE_URL}/request-magic-link`;
-      const payload = { email };
-
-      logRequest("Request Magic Link", url, "POST", payload);
-
-      const res = await fetch(url, {
+      const res = await fetch(`${BASE_URL}/request-magic-link`, {
         method: "POST",
         headers: getHeaders(),
         credentials: "include",
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ email }),
       });
-
-      return handleResponse(res, "Request Magic Link");
+      return handleResponse(res);
     },
 
     verifyMagicLink: async (token: string, email: string) => {
       const params = new URLSearchParams({ token, email });
-      const url = `${BASE_URL}/verify-magic-link?${params}`;
-
-      logRequest("Verify Magic Link", url, "GET", null);
-
-      const res = await fetch(url, {
+      const res = await fetch(`${BASE_URL}/verify-magic-link?${params}`, {
         method: "GET",
         headers: getHeaders(),
         credentials: "include",
       });
-
-      return handleResponse(res, "Verify Magic Link");
+      return handleResponse(res);
     },
   },
 
   profile: {
     getMe: async (token?: string) => {
-      const url = `${BASE_URL}/profile/me`;
-      logRequest("Get Profile", url, "GET", null);
-
-      const res = await fetch(url, {
+      // NOTE: This will 404 if Backend doesn't add: app.use('/api/profile', ...)
+      const res = await fetch(`${BASE_URL}/profile/me`, {
         method: "GET",
         headers: getHeaders(token),
         credentials: "include",
       });
-
-      return handleResponse(res, "Get Profile");
+      return handleResponse(res);
     },
 
     completeProfile: async (data: ProfilePayload, token?: string) => {
-      const url = `${BASE_URL}/profile/complete-profile`;
-      logRequest("Complete Profile", url, "POST", data);
-
-      const res = await fetch(url, {
+      const res = await fetch(`${BASE_URL}/profile/complete-profile`, {
         method: "POST",
         headers: getHeaders(token),
         credentials: "include",
         body: JSON.stringify(data),
       });
-
-      return handleResponse(res, "Complete Profile");
+      return handleResponse(res);
     },
 
     uploadPassport: async (file: File, token?: string) => {
-      const url = `${BASE_URL}/profile/upload-passport`;
-      logRequest("Upload Passport", url, "POST", { fileName: file.name, size: file.size });
-
       const formData = new FormData();
       formData.append("image", file);
-
-      const res = await fetch(url, {
+      const res = await fetch(`${BASE_URL}/profile/upload-passport`, {
         method: "POST",
         headers: getHeaders(token, true),
         credentials: "include",
         body: formData,
       });
-
-      return handleResponse(res, "Upload Passport");
+      return handleResponse(res);
     },
   },
 
-  // Mocked for now
-  portfolio: {
-    getProjects: async () => { return []; }
-  },
-
   checkHealth: async () => {
-    const url = "https://axia-hackathon.onrender.com/";
-    logRequest("Health Check", url, "GET", null);
-    const res = await fetch(url, { method: "GET", credentials: "include" });
-    return handleResponse(res, "Health Check");
+    // Health check usually sits at root / or /api/
+    const res = await fetch("https://axia-hackathon.onrender.com/", {
+      method: "GET",
+      credentials: "include",
+    });
+    return handleResponse(res);
   },
 };
 
-// --- Enhanced Response Handler ---
-async function handleResponse(response: Response, actionName: string) {
-  // Clone response so we can read the body twice (once for logging, once for return)
-  const clone = response.clone();
-  
+// --- Response Handler ---
+
+async function handleResponse(response: Response) {
+  // Read body only once
   let body;
   try {
-    body = await clone.json();
+    body = await response.json();
   } catch (e) {
-    body = await clone.text();
+    body = {};
   }
 
-  logResponse(actionName, response.status, body);
-
+  // Log Error if it fails
   if (!response.ok) {
+    console.error(`❌ API Error (${response.status}):`, body);
     throw new Error(
-      (typeof body === 'object' && body.message) || 
-      (typeof body === 'object' && body.error) || 
-      `HTTP Error ${response.status}`
+      body.message || body.error || `HTTP Error ${response.status}`
     );
   }
-  
-  // Return original response parsing
-  return response.json();
+
+  return body;
 }
