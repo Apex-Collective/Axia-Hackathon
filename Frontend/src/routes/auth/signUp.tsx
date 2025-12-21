@@ -5,7 +5,7 @@ import { WizardLayout } from "@/components/onboarding/WizardLayout";
 import { Step1Origin } from "@/components/onboarding/Step1Origin";
 import { Step2Work } from "@/components/onboarding/Step2Work";
 import { Step3Intro } from "@/components/onboarding/Step3Intro";
-import { api, RegisterPayload } from "@/services/api";
+import { api, type RegisterPayload } from "@/services/api";
 
 export default function SignUp() {
   const navigate = useNavigate();
