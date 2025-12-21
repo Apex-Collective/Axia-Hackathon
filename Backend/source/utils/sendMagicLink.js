@@ -15,8 +15,7 @@ module.exports = async function sendMagicLink(user){
     console.log('EXPIRES AT:', new Date(user.magicLinkTokenExpires));
     console.log('=================================');
 
-    const magicLink = `${process.env.BACKEND_URL}/verify?token=${token}&email=${user.email}`;
-    //const magicLink = `${process.env.FRONTEND_URL}/verify?token=${token}&email=${user.email}`;
+    const magicLink = `${process.env.FRONTEND_URL}/verify?token=${token}&email=${user.email}`;
     await mailer.sendMail({
         from: `"Apex Collective" <${process.env.EMAIL}>`,
         to: user.email,
