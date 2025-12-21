@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 const User = require('../models/user');
-const jwt = require('jsonwebtoken');
 const {generateToken} = require('../utils/token');
 const sendMagicLink = require('../utils/sendMagicLink');
+const Profile = require('../models/profile');
 
 exports.register = async (req, res) => {
     const {name, email, country, role, skills, yearsOfExperience, tools, introduction} = req.body;
@@ -32,7 +32,6 @@ exports.requestMagicLink = async (req, res) => {
     const {email} = req.body;
     try{
         const user = await User.findOne({email});
-        console.log(user);
         if(!user){
             return res.status(404).json({message: 'User not found.'});
         }
@@ -67,6 +66,12 @@ exports.verifyMagicLink = async (req, res) => {
 
         const accessToken = generateToken(user._id);
         await user.save();
+
+        await Profile.findOneAndUpdate(
+            {user: user._id},
+            {user: user._id, isVerified: true},
+            {upsert: true, new: true, setDefaultsOnInsert: true}
+        );
      
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
