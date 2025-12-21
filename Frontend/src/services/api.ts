@@ -1,14 +1,13 @@
 const BASE_URL = "https://axia-hackathon.onrender.com/api";
 
 // --- Types & Interfaces ---
-
 export interface RegisterPayload {
   name: string;
   email: string;
   country: string;
   role: string;
-  skills: string; // The API expects a string (e.g., "React, Vue"), not an array based on the docs
-  yearsOfExperience: string;
+  skills: string; 
+  yearsOfExperience: string; 
   tools: string;
   introduction: string;
 }
@@ -20,160 +19,195 @@ export interface ProfilePayload {
     country: string;
     jobTitle: string;
     yearsOfExperience: number;
-    tools: string[]; // Note: verify if API expects string or array here. Docs showed array in complete-profile response
+    tools: string[]; 
     desiredSalary: string;
     availabilityHoursPerWeek: number;
     bio: string;
   };
 }
 
-export interface AuthResponse {
-  message: string;
-  [key: string]: any;
-}
-
 // --- Helper for Headers ---
-
-/**
- * Generates headers.
- * Note: 'Content-Type' is excluded for FormData so the browser can set the boundary automatically.
- */
 const getHeaders = (token?: string, isFormData = false): HeadersInit => {
   const headers: HeadersInit = {};
-
-  // If you have a stored API Key or JWT, you can inject it here automatically
-  // const storedToken = localStorage.getItem('token');
-  // if (storedToken) headers['Authorization'] = `Bearer ${storedToken}`;
-
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-    // The docs also mention X-API-Key in some places.
-    // If your backend requires that specific header instead of Bearer, uncomment below:
-    // headers['X-API-Key'] = token;
-  }
-
-  if (!isFormData) {
-    headers["Content-Type"] = "application/json";
-  }
-
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  if (!isFormData) headers["Content-Type"] = "application/json";
   return headers;
 };
 
-// --- API Client ---
+// --- Logger Helper (Acts like Postman Console) ---
+const logRequest = (name: string, url: string, method: string, body: any) => {
+  console.group(`🚀 API REQUEST: ${name}`);
+  console.log(`URL: ${url}`);
+  console.log(`Method: ${method}`);
+  if(body) console.log("Payload:", body);
+  console.groupEnd();
+};
 
+const logResponse = (name: string, status: number, data: any) => {
+  const color = status >= 400 ? "color: red; font-weight: bold;" : "color: green; font-weight: bold;";
+  console.group(`%c📩 API RESPONSE: ${name} (${status})`, color);
+  console.log("Data:", data);
+  console.groupEnd();
+};
+
+// --- API Client ---
 export const api = {
   auth: {
-    /**
-     * Register a new user
-     */
     register: async (data: RegisterPayload) => {
-      const res = await fetch(`${BASE_URL}/auth/register`, {
+      // 1. Prepare Data
+      const payload = {
+        ...data,
+        yearsOfExperience: parseInt(data.yearsOfExperience) || 0,
+        skills: data.skills.includes(",") ? data.skills.split(",").map(s => s.trim()) : [data.skills],
+        tools: data.tools.includes(",") ? data.tools.split(",").map(s => s.trim()) : [data.tools]
+      };
+
+      const url = `${BASE_URL}/register`;
+      
+      // 2. Log Request
+      logRequest("Register", url, "POST", payload);
+
+      const res = await fetch(url, {
         method: "POST",
         headers: getHeaders(),
-        body: JSON.stringify(data),
+        credentials: "include",
+        body: JSON.stringify(payload),
       });
-      return handleResponse(res);
+
+      // 3. Log & Handle Response
+      const json = await handleResponse(res, "Register");
+      return json;
     },
 
-    /**
-     * Request a Magic Link (Login)
-     */
     login: async (email: string) => {
-      const res = await fetch(`${BASE_URL}/auth/login`, {
+      const url = `${BASE_URL}/login`;
+      const payload = { email };
+      
+      logRequest("Login", url, "POST", payload);
+
+      const res = await fetch(url, {
         method: "POST",
         headers: getHeaders(),
-        body: JSON.stringify({ email }),
+        credentials: "include",
+        body: JSON.stringify(payload),
       });
-      return handleResponse(res);
+
+      return handleResponse(res, "Login");
     },
 
-    /**
-     * Request a Magic Link (Explicit Endpoint)
-     */
     requestMagicLink: async (email: string) => {
-      const res = await fetch(`${BASE_URL}/auth/request-magic-link`, {
+      const url = `${BASE_URL}/request-magic-link`;
+      const payload = { email };
+
+      logRequest("Request Magic Link", url, "POST", payload);
+
+      const res = await fetch(url, {
         method: "POST",
         headers: getHeaders(),
-        body: JSON.stringify({ email }),
+        credentials: "include",
+        body: JSON.stringify(payload),
       });
-      return handleResponse(res);
+
+      return handleResponse(res, "Request Magic Link");
     },
 
-    /**
-     * Verify the Magic Link token
-     */
     verifyMagicLink: async (token: string, email: string) => {
-      // Constructs URL: /verify-magic-link?token=...&email=...
       const params = new URLSearchParams({ token, email });
-      const res = await fetch(`${BASE_URL}/auth/verify-magic-link?${params}`, {
+      const url = `${BASE_URL}/verify-magic-link?${params}`;
+
+      logRequest("Verify Magic Link", url, "GET", null);
+
+      const res = await fetch(url, {
         method: "GET",
         headers: getHeaders(),
+        credentials: "include",
       });
-      return handleResponse(res);
+
+      return handleResponse(res, "Verify Magic Link");
     },
   },
 
   profile: {
-    /**
-     * Get the current user's profile
-     */
     getMe: async (token?: string) => {
-      const res = await fetch(`${BASE_URL}/profile/me`, {
+      const url = `${BASE_URL}/profile/me`;
+      logRequest("Get Profile", url, "GET", null);
+
+      const res = await fetch(url, {
         method: "GET",
         headers: getHeaders(token),
+        credentials: "include",
       });
-      return handleResponse(res);
+
+      return handleResponse(res, "Get Profile");
     },
 
-    /**
-     * Complete or Update the user profile
-     */
     completeProfile: async (data: ProfilePayload, token?: string) => {
-      const res = await fetch(`${BASE_URL}/profile/complete-profile`, {
+      const url = `${BASE_URL}/profile/complete-profile`;
+      logRequest("Complete Profile", url, "POST", data);
+
+      const res = await fetch(url, {
         method: "POST",
         headers: getHeaders(token),
+        credentials: "include",
         body: JSON.stringify(data),
       });
-      return handleResponse(res);
+
+      return handleResponse(res, "Complete Profile");
     },
 
-    /**
-     * Upload Passport Photo
-     * Accepts a File object (from an input type="file")
-     */
     uploadPassport: async (file: File, token?: string) => {
+      const url = `${BASE_URL}/profile/upload-passport`;
+      logRequest("Upload Passport", url, "POST", { fileName: file.name, size: file.size });
+
       const formData = new FormData();
       formData.append("image", file);
 
-      const res = await fetch(`${BASE_URL}/profile/upload-passport`, {
+      const res = await fetch(url, {
         method: "POST",
-        // isFormData = true prevents manual Content-Type setting
         headers: getHeaders(token, true),
+        credentials: "include",
         body: formData,
       });
-      return handleResponse(res);
+
+      return handleResponse(res, "Upload Passport");
     },
   },
 
-  /**
-   * Health Check
-   */
+  // Mocked for now
+  portfolio: {
+    getProjects: async () => { return []; }
+  },
+
   checkHealth: async () => {
-    const res = await fetch("https://axia-hackathon.onrender.com/", {
-      method: "GET",
-    });
-    return handleResponse(res);
+    const url = "https://axia-hackathon.onrender.com/";
+    logRequest("Health Check", url, "GET", null);
+    const res = await fetch(url, { method: "GET", credentials: "include" });
+    return handleResponse(res, "Health Check");
   },
 };
 
-// --- Response Handler ---
+// --- Enhanced Response Handler ---
+async function handleResponse(response: Response, actionName: string) {
+  // Clone response so we can read the body twice (once for logging, once for return)
+  const clone = response.clone();
+  
+  let body;
+  try {
+    body = await clone.json();
+  } catch (e) {
+    body = await clone.text();
+  }
 
-async function handleResponse(response: Response) {
+  logResponse(actionName, response.status, body);
+
   if (!response.ok) {
-    const errorBody = await response.json().catch(() => ({}));
     throw new Error(
-      errorBody.message || errorBody.error || `HTTP Error ${response.status}`
+      (typeof body === 'object' && body.message) || 
+      (typeof body === 'object' && body.error) || 
+      `HTTP Error ${response.status}`
     );
   }
+  
+  // Return original response parsing
   return response.json();
 }
