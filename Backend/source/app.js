@@ -6,9 +6,22 @@ const router = require('./routes');
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+
+const allowedOrigins = [
+    "https://axia-hackathon.vercel.app", //current frontend URL
+    "https://axia-hackathon-mf2j.vercel.app" //other URL 
+];
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
+    origin: function (origin, callback) {
+        if(!origin) return callback(null, true); //allows REST tools like Postman
+        if(allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }else{
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true //for sening cookies
 }));
 
 app.use('/api', router);
