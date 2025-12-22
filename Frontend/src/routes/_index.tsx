@@ -25,7 +25,7 @@ import { useState } from "react";
 import TalentCard from "@/components/dashboard/TalentCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// --- Mock Data for Sections ---
+// --- Mock Data ---
 
 const TALENT_DATA = [
   {
@@ -41,7 +41,7 @@ const TALENT_DATA = [
       { name: "Typescript", icon: <Code size={12} /> },
     ],
     extraSkills: 10,
-    images: ["bg-orange-100", "bg-slate-900"], // Placeholders for gradients/images
+    images: ["bg-orange-100", "bg-slate-900"],
   },
   {
     id: 2,
@@ -132,6 +132,7 @@ const FAQ_ITEMS = [
 
 // --- Components ---
 
+// NOTE: Original "Card" style AccordionItem restored
 function AccordionItem({ question, answer }: { question: string; answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -164,38 +165,49 @@ export default function HomePage() {
         <link rel="icon" type="image/svg+xml" href="/images/Logo.svg" />
       </Helmet>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full bg-white/80 backdrop-blur-md border-b border-transparent">
-        <div className="items-center gap-8 text-sm font-medium text-slate-600 hidden md:flex">
-          <Link to="/discover" className="hover:text-slate-900 transition-colors">Discover</Link>
-          <Link to="/how-it-works" className="hover:text-slate-900 transition-colors">How it Works</Link>
-          <div className="group relative flex items-center gap-1 cursor-pointer hover:text-slate-900 transition-colors">
-            <span>Products</span>
-            <ChevronDown className="w-4 h-4" />
-          </div>
-          <Link to="#faqs" className="hover:text-slate-900 transition-colors">FAQs</Link>
-        </div>
-
-        {/* Logo Card */}
-        <div className="absolute left-1/2 top-0 -translate-x-1/2 pt-4 pb-3 px-6 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.05)] rounded-b-2xl border-b border-x border-slate-100">
-          <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-slate-900">
-            <div className="w-6 h-6 bg-slate-900 rounded-sm flex items-center justify-center text-white text-xs">
-              <Upload className="w-3 h-3" />
+      {/* --- FIXED NAVIGATION --- */}
+      {/* Changed to Grid Layout to prevent center logo from overlapping links */}
+      <nav className="fixed top-0 left-0 right-0 z-50 px-6 h-[80px] w-full bg-white/90 backdrop-blur-md border-b border-transparent">
+        <div className="max-w-7xl mx-auto h-full grid grid-cols-2 md:grid-cols-3 items-center">
+          
+          {/* Left: Navigation Links */}
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+            <Link to="/discover" className="hover:text-slate-900 transition-colors">Discover</Link>
+            <Link to="/how-it-works" className="hover:text-slate-900 transition-colors">How it Works</Link>
+            <div className="group relative flex items-center gap-1 cursor-pointer hover:text-slate-900 transition-colors">
+              <span>Products</span>
+              <ChevronDown className="w-4 h-4" />
             </div>
-            ApexCollective
+            <Link to="#faqs" className="hover:text-slate-900 transition-colors">FAQs</Link>
           </div>
-        </div>
 
-        <div className="flex items-center gap-4">
-          <Link to="/auth/login" className="text-sm font-medium text-slate-600 hover:text-slate-900">
-            Login
-          </Link>
-          <Link
-            to="/auth/signup"
-            className="px-5 py-2.5 text-sm font-medium bg-slate-900 text-white rounded-full hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
-          >
-            Get Started
-          </Link>
+          {/* Center: Hanging Logo Card */}
+          {/* Using flex justify-center inside the middle grid column ensures perfect centering */}
+          <div className="flex justify-start md:justify-center relative h-full">
+             <div className="absolute top-0 px-6 pt-5 pb-4 bg-white shadow-lg shadow-slate-200/50 rounded-b-2xl border-x border-b border-slate-100 z-10">
+                <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-slate-900">
+                  <div className="w-6 h-6 bg-slate-900 rounded-sm flex items-center justify-center text-white text-xs">
+                    <Upload className="w-3 h-3" />
+                  </div>
+                  <span className="hidden lg:inline">ApexCollective</span>
+                  <span className="lg:hidden">Apex</span>
+                </div>
+             </div>
+          </div>
+
+          {/* Right: Auth Buttons */}
+          <div className="flex items-center justify-end gap-4">
+            <Link to="/auth/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 hidden sm:block">
+              Login
+            </Link>
+            <Link
+              to="/auth/signup"
+              className="px-5 py-2.5 text-sm font-medium bg-slate-900 text-white rounded-full hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
+            >
+              Get Started
+            </Link>
+          </div>
+
         </div>
       </nav>
 
@@ -204,7 +216,7 @@ export default function HomePage() {
         
         {/* --- HERO SECTION --- */}
         <section className="px-4 mb-32 relative">
-             {/* Abstract Background Elements (Stipples) */}
+             {/* Abstract Background Elements */}
             <div className="absolute top-20 left-10 opacity-20 pointer-events-none hidden lg:block">
             <svg width="200" height="400" fill="currentColor" className="text-slate-400">
                 <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
