@@ -7,7 +7,7 @@ export interface RegisterPayload {
   email: string;
   country: string;
   role: string;
-  skills: string; 
+  skills: string;
   yearsOfExperience: string;
   tools: string;
   introduction: string;
@@ -40,29 +40,43 @@ const getHeaders = (token?: string, isFormData = false): HeadersInit => {
 
 export const api = {
   auth: {
+    /**
+     * Register a new user
+     * POST /api/auth/register
+     */
     register: async (data: RegisterPayload) => {
       // 1. Convert Data to Backend Types (Arrays/Numbers)
       const payload = {
         ...data,
         yearsOfExperience: parseInt(data.yearsOfExperience) || 0,
-        // Robust split: handles commas, splits, trims, and removes empty strings
-        skills: data.skills.split(",").map(s => s.trim()).filter(s => s.length > 0),
-        tools: data.tools.split(",").map(s => s.trim()).filter(s => s.length > 0),
+        // Robust split: handles commas, trims spaces, removes empty items
+        skills: data.skills
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0),
+        tools: data.tools
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0),
       };
 
       console.log("🚀 Register Payload:", payload);
 
-      const res = await fetch(`${BASE_URL}/register`, {
+      const res = await fetch(`${BASE_URL}/auth/register`, {
         method: "POST",
         headers: getHeaders(),
-        credentials: "include", 
+        credentials: "include", // REQUIRED for cookies
         body: JSON.stringify(payload),
       });
       return handleResponse(res);
     },
 
+    /**
+     * Login
+     * POST /api/auth/login
+     */
     login: async (email: string) => {
-      const res = await fetch(`${BASE_URL}/login`, {
+      const res = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
         headers: getHeaders(),
         credentials: "include",
@@ -71,8 +85,12 @@ export const api = {
       return handleResponse(res);
     },
 
+    /**
+     * Request Magic Link
+     * POST /api/auth/request-magic-link
+     */
     requestMagicLink: async (email: string) => {
-      const res = await fetch(`${BASE_URL}/request-magic-link`, {
+      const res = await fetch(`${BASE_URL}/auth/request-magic-link`, {
         method: "POST",
         headers: getHeaders(),
         credentials: "include",
@@ -81,9 +99,13 @@ export const api = {
       return handleResponse(res);
     },
 
+    /**
+     * Verify Magic Link
+     * GET /api/auth/verify-magic-link
+     */
     verifyMagicLink: async (token: string, email: string) => {
       const params = new URLSearchParams({ token, email });
-      const res = await fetch(`${BASE_URL}/verify-magic-link?${params}`, {
+      const res = await fetch(`${BASE_URL}/auth/verify-magic-link?${params}`, {
         method: "GET",
         headers: getHeaders(),
         credentials: "include",
@@ -93,6 +115,10 @@ export const api = {
   },
 
   profile: {
+    /**
+     * Get Current Profile
+     * GET /api/profile/me
+     */
     getMe: async (token?: string) => {
       const res = await fetch(`${BASE_URL}/profile/me`, {
         method: "GET",
@@ -102,6 +128,10 @@ export const api = {
       return handleResponse(res);
     },
 
+    /**
+     * Complete/Update Profile
+     * POST /api/profile/complete-profile
+     */
     completeProfile: async (data: ProfilePayload, token?: string) => {
       const res = await fetch(`${BASE_URL}/profile/complete-profile`, {
         method: "POST",
@@ -112,6 +142,10 @@ export const api = {
       return handleResponse(res);
     },
 
+    /**
+     * Upload Passport Photo
+     * POST /api/profile/upload-passport
+     */
     uploadPassport: async (file: File, token?: string) => {
       const formData = new FormData();
       formData.append("image", file);
@@ -125,6 +159,9 @@ export const api = {
     },
   },
 
+  /**
+   * Health Check
+   */
   checkHealth: async () => {
     const res = await fetch("https://axia-hackathon.onrender.com/", {
       method: "GET",
@@ -137,19 +174,21 @@ export const api = {
 // --- Response Handler ---
 
 async function handleResponse(response: Response) {
+  // Read body only once
   let body;
   try {
     body = await response.json();
   } catch (e) {
-    body = {}; 
+    body = {};
   }
 
+  // Log Error if it fails (Helps you debug 400/404/500 errors)
   if (!response.ok) {
     console.error(`❌ API Error (${response.status}):`, body);
     throw new Error(
       body.message || body.error || `HTTP Error ${response.status}`
     );
   }
-  
+
   return body;
 }
