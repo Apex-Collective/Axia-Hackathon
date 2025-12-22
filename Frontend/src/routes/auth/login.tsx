@@ -33,6 +33,18 @@ export default function Login() {
       navigate("/auth/magic-link", { state: { email } });
 
     } catch (error: any) {
+      
+      
+      if (error.message === "Profile not verified.") {
+        toast.info("Profile Unverified", {
+          description: "Redirecting you to verify your account..."
+        });
+        // Send users to the page where they can finally click "Resend Magic Link"
+        navigate("/auth/magic-link", { state: { email } });
+        return;
+      }
+
+      // Default error for wrong email/server crash
       toast.error("Login Failed", {
         description: error.message || "Something went wrong. Please try again."
       });
