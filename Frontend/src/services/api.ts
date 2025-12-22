@@ -7,7 +7,7 @@ export interface RegisterPayload {
   email: string;
   country: string;
   role: string;
-  skills: string;
+  skills: string; 
   yearsOfExperience: string;
   tools: string;
   introduction: string;
@@ -31,7 +31,6 @@ export interface ProfilePayload {
 
 const getHeaders = (token?: string, isFormData = false): HeadersInit => {
   const headers: HeadersInit = {};
-  // We still send the Bearer token just in case they fix the middleware later
   if (token) headers["Authorization"] = `Bearer ${token}`;
   if (!isFormData) headers["Content-Type"] = "application/json";
   return headers;
@@ -46,21 +45,17 @@ export const api = {
       const payload = {
         ...data,
         yearsOfExperience: parseInt(data.yearsOfExperience) || 0,
-        skills: data.skills.includes(",")
-          ? data.skills.split(",").map((s) => s.trim())
-          : [data.skills],
-        tools: data.tools.includes(",")
-          ? data.tools.split(",").map((s) => s.trim())
-          : [data.tools],
+        // Robust split: handles commas, splits, trims, and removes empty strings
+        skills: data.skills.split(",").map(s => s.trim()).filter(s => s.length > 0),
+        tools: data.tools.split(",").map(s => s.trim()).filter(s => s.length > 0),
       };
 
-      // 2. Log for debugging
       console.log("🚀 Register Payload:", payload);
 
       const res = await fetch(`${BASE_URL}/register`, {
         method: "POST",
         headers: getHeaders(),
-        credentials: "include", // REQUIRED: Backend reads req.cookies.accessToken
+        credentials: "include", 
         body: JSON.stringify(payload),
       });
       return handleResponse(res);
@@ -99,7 +94,6 @@ export const api = {
 
   profile: {
     getMe: async (token?: string) => {
-      // NOTE: This will 404 if Backend doesn't add: app.use('/api/profile', ...)
       const res = await fetch(`${BASE_URL}/profile/me`, {
         method: "GET",
         headers: getHeaders(token),
@@ -132,7 +126,6 @@ export const api = {
   },
 
   checkHealth: async () => {
-    // Health check usually sits at root / or /api/
     const res = await fetch("https://axia-hackathon.onrender.com/", {
       method: "GET",
       credentials: "include",
@@ -144,21 +137,19 @@ export const api = {
 // --- Response Handler ---
 
 async function handleResponse(response: Response) {
-  // Read body only once
   let body;
   try {
     body = await response.json();
   } catch (e) {
-    body = {};
+    body = {}; 
   }
 
-  // Log Error if it fails
   if (!response.ok) {
     console.error(`❌ API Error (${response.status}):`, body);
     throw new Error(
       body.message || body.error || `HTTP Error ${response.status}`
     );
   }
-
+  
   return body;
 }

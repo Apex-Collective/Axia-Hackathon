@@ -76,7 +76,7 @@ exports.verifyMagicLink = async (req, res) => {
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: 15 * 60 * 1000 //15 minutes
         });
 

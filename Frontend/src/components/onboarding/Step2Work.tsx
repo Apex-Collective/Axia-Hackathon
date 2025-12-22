@@ -73,6 +73,7 @@ export function Step2Work({ data, onUpdate, onNext }: Step2Props) {
           <FieldLabel htmlFor="experience">Years of professional experience</FieldLabel>
           <Input 
             id="experience"
+            type="number"
             placeholder="Eg. 1, 2, 3, etc"
             value={data.experience}
             onChange={(e) => onUpdate({ experience: e.target.value })}
