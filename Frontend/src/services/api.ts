@@ -49,7 +49,6 @@ export const api = {
       const payload = {
         ...data,
         yearsOfExperience: parseInt(data.yearsOfExperience) || 0,
-        // Robust split: handles commas, trims spaces, removes empty items
         skills: data.skills
           .split(",")
           .map((s) => s.trim())
@@ -60,12 +59,17 @@ export const api = {
           .filter((s) => s.length > 0),
       };
 
-      console.log("🚀 Register Payload:", payload);
+      const url = `${BASE_URL}/auth/register`;
+      console.group("🚀 API REQUEST: REGISTER");
+      console.log("Endpoint:", url);
+      console.log("Method:", "POST");
+      console.log("Body:", payload);
+      console.groupEnd();
 
-      const res = await fetch(`${BASE_URL}/auth/register`, {
+      const res = await fetch(url, {
         method: "POST",
         headers: getHeaders(),
-        credentials: "include", // REQUIRED for cookies
+        credentials: "include",
         body: JSON.stringify(payload),
       });
       return handleResponse(res);
@@ -76,25 +80,43 @@ export const api = {
      * POST /api/auth/login
      */
     login: async (email: string) => {
-      const res = await fetch(`${BASE_URL}/auth/login`, {
+      const url = `${BASE_URL}/auth/login`;
+      const body = { email };
+
+      console.group("🚀 API REQUEST: LOGIN");
+      console.log("Endpoint:", url);
+      console.log("Method:", "POST");
+      console.log("Body:", body);
+      console.groupEnd();
+
+      const res = await fetch(url, {
         method: "POST",
         headers: getHeaders(),
         credentials: "include",
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(body),
       });
       return handleResponse(res);
     },
 
     /**
-     * Request Magic Link
+     * Request Magic Link (Resend)
      * POST /api/auth/request-magic-link
      */
     requestMagicLink: async (email: string) => {
-      const res = await fetch(`${BASE_URL}/auth/request-magic-link`, {
+      const url = `${BASE_URL}/auth/request-magic-link`;
+      const body = { email };
+
+      console.group("🚀 API REQUEST: REQUEST MAGIC LINK");
+      console.log("Endpoint:", url);
+      console.log("Method:", "POST");
+      console.log("Body:", body);
+      console.groupEnd();
+
+      const res = await fetch(url, {
         method: "POST",
         headers: getHeaders(),
         credentials: "include",
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(body),
       });
       return handleResponse(res);
     },
@@ -105,7 +127,14 @@ export const api = {
      */
     verifyMagicLink: async (token: string, email: string) => {
       const params = new URLSearchParams({ token, email });
-      const res = await fetch(`${BASE_URL}/auth/verify-magic-link?${params}`, {
+      const url = `${BASE_URL}/auth/verify-magic-link?${params}`;
+
+      console.group("🚀 API REQUEST: VERIFY MAGIC LINK");
+      console.log("Endpoint:", url);
+      console.log("Method:", "GET");
+      console.groupEnd();
+
+      const res = await fetch(url, {
         method: "GET",
         headers: getHeaders(),
         credentials: "include",
@@ -115,10 +144,6 @@ export const api = {
   },
 
   profile: {
-    /**
-     * Get Current Profile
-     * GET /api/profile/me
-     */
     getMe: async (token?: string) => {
       const res = await fetch(`${BASE_URL}/profile/me`, {
         method: "GET",
@@ -128,10 +153,6 @@ export const api = {
       return handleResponse(res);
     },
 
-    /**
-     * Complete/Update Profile
-     * POST /api/profile/complete-profile
-     */
     completeProfile: async (data: ProfilePayload, token?: string) => {
       const res = await fetch(`${BASE_URL}/profile/complete-profile`, {
         method: "POST",
@@ -142,10 +163,6 @@ export const api = {
       return handleResponse(res);
     },
 
-    /**
-     * Upload Passport Photo
-     * POST /api/profile/upload-passport
-     */
     uploadPassport: async (file: File, token?: string) => {
       const formData = new FormData();
       formData.append("image", file);
@@ -159,9 +176,6 @@ export const api = {
     },
   },
 
-  /**
-   * Health Check
-   */
   checkHealth: async () => {
     const res = await fetch("https://axia-hackathon.onrender.com/", {
       method: "GET",
@@ -174,7 +188,6 @@ export const api = {
 // --- Response Handler ---
 
 async function handleResponse(response: Response) {
-  // Read body only once
   let body;
   try {
     body = await response.json();
@@ -182,13 +195,16 @@ async function handleResponse(response: Response) {
     body = {};
   }
 
-  // Log Error if it fails (Helps you debug 400/404/500 errors)
   if (!response.ok) {
-    console.error(`❌ API Error (${response.status}):`, body);
+    console.group("❌ API ERROR");
+    console.error(`Status: ${response.status}`);
+    console.error("Error Body:", body);
+    console.groupEnd();
     throw new Error(
       body.message || body.error || `HTTP Error ${response.status}`
     );
   }
 
+  console.log("✅ API SUCCESS:", body);
   return body;
 }
