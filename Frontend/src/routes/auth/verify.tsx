@@ -24,9 +24,6 @@ export default function VerifyMagicLink() {
 
       try {
         await api.auth.verifyMagicLink(token, email);
-        // Assuming token is sufficient for auth, store it.
-        localStorage.setItem("authToken", token);
-        
         toast.success("Verified!", { description: "Welcome back." });
         navigate("/dashboard"); 
       } catch (error: any) {

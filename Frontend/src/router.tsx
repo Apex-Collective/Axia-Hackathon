@@ -12,6 +12,7 @@ import DashboardProfilePage from "./routes/dashboard/profile";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
+  { path: "/verify", element: <VerifyMagicLink /> },
   {
     path: "dashboard",
     element: <DashboardLayout />,
@@ -28,7 +29,7 @@ export const router = createBrowserRouter([
       { path: "signup", element: <SignUp /> },
       { path: "login", element: <Login /> },
       { path: "magic-link", element: <MagicLinkSent /> },
-      { path: "verify-magic-link", element: <VerifyMagicLink /> }, // 2. Add the route definition
+      // { path: "verify-magic-link", element: <VerifyMagicLink /> }, // 2. Add the route definition
     ],
   },
 ]);
