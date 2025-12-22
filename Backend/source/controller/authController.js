@@ -73,10 +73,11 @@ exports.verifyMagicLink = async (req, res) => {
             {upsert: true, new: true, setDefaultsOnInsert: true}
         );
      
+        // Fixed: Cookie settings for Cross-Site (Vercel <-> Render)
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none',
+            sameSite: 'none', 
             maxAge: 15 * 60 * 1000 //15 minutes
         });
 
@@ -89,17 +90,23 @@ exports.verifyMagicLink = async (req, res) => {
 
 exports.login = async (req, res) => {
     const {email} = req.body;
-    if(!email) res.status(400).json({message: 'Email is required.'});
+    // FIX: Added 'return' to stop execution if email is missing
+    if(!email) return res.status(400).json({message: 'Email is required.'});
+    
     try{
         const user = await User.findOne({email});
-        if(!user) res.status(404).json({message: 'User not found.'});
+        
+        // FIX: Added 'return' to stop execution if user is not found
+        if(!user) return res.status(404).json({message: 'User not found.'});
 
-        if(!user.isVerified) res.status(401).json({message: 'Profile not verified.'});
+        // FIX: Added 'return' to stop execution if profile is not verified
+        if(!user.isVerified) return res.status(401).json({message: 'Profile not verified.'});
 
         await sendMagicLink(user);
 
         res.status(200).json({message: 'Login, magic link sent to your email.'});
     }catch(error){
+        console.error("Login Error:", error); // Added logging to help debugging
         res.status(500).json({message: 'Server error', error: error.message})
     }
 };
