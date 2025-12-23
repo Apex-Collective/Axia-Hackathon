@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const resend = require('../config/mail');
+const { getMaxListeners } = require('events');
 
 module.exports = async function sendMagicLink(user){
     const token = crypto.randomBytes(32).toString('hex');
@@ -18,7 +19,7 @@ module.exports = async function sendMagicLink(user){
     const magicLink = `${process.env.FRONTEND_URL}/verify?token=${token}&email=${user.email}`;
     await resend.emails.send({
         from: 'Apex Collective <onboarding@resend.dev>',
-        to: user.email,
+        to: 'onyemafavour1994@gmail.com',
         subject: 'Apex Collective Magic Link',
         html: `<p>Click to verify your profile:</p><a href="${magicLink}">Login</a>`
     });
