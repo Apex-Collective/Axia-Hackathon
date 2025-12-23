@@ -16,7 +16,7 @@ module.exports = async function sendMagicLink(user){
     console.log('=================================');
 
     const magicLink = `${process.env.FRONTEND_URL}/verify?token=${token}&email=${user.email}`;
-    await mailer.sendMail({
+    await resend.emails.send({
         from: 'Apex Collective <onboarding@resend.dev>',
         to: user.email,
         subject: 'Apex Collective Magic Link',
