@@ -8,7 +8,7 @@ interface ProfileHeaderProps {
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
   // Calculate completion based on data existence
   const calculateProgress = () => {
-    if (!user) return 0;
+    if (!user) return 30;
     let score = 0;
     const totalPoints = 5; 
     
@@ -30,7 +30,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       {/* --- Section 4: Main Widgets Grid --- */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
         {/* LEFT CARD: Onboarding / Basics */}
-        <div className="lg:col-span-2 bg-gray-50/50 rounded-2xl border border-gray-100 p-6 relative shadow-sm hover:shadow-md transition-shadow">
+        <div className="lg:col-span-2 bg-gray-50 rounded-2xl border border-gray-100 p-6 relative shadow-sm hover:shadow-md transition-shadow">
           {/* Close Button */}
           <button className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 bg-gray-200 rounded-full p-1 cursor-pointer">
             <X size={16} />
@@ -103,7 +103,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
         </div>
 
         {/* RIGHT CARD: Gamification / Rank */}
-        <div className="lg:col-span-1 bg-[#2E1035] rounded-2xl p-6 flex flex-col justify-between min-h-[180px] relative overflow-hidden">
+        <div className="lg:col-span-1 bg-[#2E1035] rounded-2xl p-6 flex flex-col justify-between h-35 relative overflow-hidden">
           <div className="flex justify-between items-start relative z-10">
             <div>
               <p className="text-gray-300 text-xs mb-2">

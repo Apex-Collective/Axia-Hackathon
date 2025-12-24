@@ -36,7 +36,7 @@ export function ContentTabs({ tabs, className }: ContentTabsProps) {
             key={tab.path}
             to={tab.path}
             className={cn(
-              "group flex items-center gap-2 border-b-2 px-0 py-3 font-medium transition-all cursor-pointer",
+              "group flex items-center gap-2 border-b-2 px-0 py-3 font-medium transition-all cursor-pointer relative",
               isActive
                 ? "border-black text-black"
                 : "border-transparent text-gray-500 hover:text-gray-700"
@@ -65,7 +65,10 @@ export function ContentTabs({ tabs, className }: ContentTabsProps) {
           </Link>
         );
       })}
-      <Link to={`${publicProfile}`} className="text-pink-500">
+      <Link
+        to={`${publicProfile}`}
+        className="text-pink-500 absolute right-10 bottom-0"
+      >
         View Public Profile
       </Link>
     </div>
