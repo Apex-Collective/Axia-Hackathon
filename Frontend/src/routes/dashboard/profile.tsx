@@ -1,5 +1,5 @@
 import { useLocation } from "react-router"; // or "react-router-dom"
-import { ContentTabs } from "@/components/dashboard/ContentTabs";
+import { ContentTabs } from "@/components/dashboard/profile/ContentTabs";
 // Import the components we just made
 import { PortfolioSection } from "@/components/dashboard/profile/PortfolioSection";
 import { ResumeSection } from "@/components/dashboard/profile/ResumeSection";
@@ -14,14 +14,6 @@ export default function DashboardProfilePage() {
       label: "Overview",
       path: "/dashboard/profile", // Assuming this is the main profile view
       // Add icons here if you have them, e.g. inactiveIcon: "..."
-    },
-    {
-      label: "Portfolio",
-      path: "/dashboard/profile/portfolio",
-    },
-    {
-      label: "Resume",
-      path: "/dashboard/profile/resume",
     },
     {
       label: "Edit Profile",

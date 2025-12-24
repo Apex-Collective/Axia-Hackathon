@@ -3,9 +3,8 @@ import { cn } from "@/lib/utils"; // generic shadcn utility for classes
 
 interface TabItem {
   label: string;
-  path: string; // The URL path this tab links to
-  activeIcon?: string; // Image path for active state
-  inactiveIcon?: string; // Image path for inactive state
+  path: string;
+  publicProfilePath?: string;
 }
 
 interface ContentTabsProps {
@@ -15,11 +14,13 @@ interface ContentTabsProps {
 
 export function ContentTabs({ tabs, className }: ContentTabsProps) {
   const location = useLocation();
+  const publicProfile = tabs.find((tab) => tab.publicProfilePath);
+  
 
   return (
     <div
       className={cn(
-        "w-full flex justify-start border-b border-gray-200 bg-transparent gap-6",
+        "w-full relative flex justify-start border-b border-gray-200 bg-transparent gap-6",
         className
       )}
     >
@@ -28,6 +29,7 @@ export function ContentTabs({ tabs, className }: ContentTabsProps) {
         // We use 'endsWith' or exact match depending on your needs.
         // For root /dashboard, we might need strict equality to avoid it being active for /dashboard/discover
         const isActive = location.pathname === tab.path;
+        
 
         return (
           <Link
@@ -41,28 +43,18 @@ export function ContentTabs({ tabs, className }: ContentTabsProps) {
             )}
           >
             {/* ICON CONTAINER */}
-            <div className="flex items-center justify-center w-5 h-5">
-              {/* Show Active Icon if isActive is true */}
-              {isActive ? (
-                <img
-                  src={tab.activeIcon}
-                  alt={tab.label}
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                // Show Inactive Icon if isActive is false
-                <img
-                  src={tab.inactiveIcon}
-                  alt={tab.label}
-                  className="w-full h-full object-contain"
-                />
-              )}
-            </div>
 
             <span>{tab.label}</span>
           </Link>
         );
       })}
+
+      <Link
+        to={`${publicProfile}`}
+        className="text-pink-500 absolute right-10 bottom-0"
+      >
+        View Public Profile
+      </Link>
     </div>
   );
 }

@@ -23,7 +23,7 @@ export default function Navbar({ user }: NavbarProps) {
   return (
     <nav className="z-50 w-full h-16 bg-white border-b border-brand-primary/20 flex items-center justify-between px-4 md:px-8 fixed top-0 shadow-sm">
       {/* Logo Div */}
-      <Link to="/dashboard" className="flex items-center">
+      <Link to="/" className="flex items-center">
         <img
           src="/images/Logo.svg"
           alt="Logo"
