@@ -183,12 +183,14 @@ export default function HomePage() {
         <link rel="icon" type="image/svg+xml" href="/images/Logo.svg" />
       </Helmet>
 
-      {/* --- FIXED NAVIGATION --- */}
-      {/* Changed to Grid Layout to prevent center logo from overlapping links */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 h-20 w-full bg-white/90 backdrop-blur-md border-b border-transparent">
-        <div className="max-w-7xl mx-auto h-full grid grid-cols-2 md:grid-cols-3 items-center">
+      
+      <nav className="fixed top-0 left-0 right-0 z-50 px-6 h-20 w-full pointer-events-none">
+        {/* 1. Main Background Bar (Full Width) */}
+        <div className="absolute top-0 left-0 w-full h-full bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm pointer-events-auto"></div>
+
+        <div className="max-w-7xl mx-auto h-full grid grid-cols-2 md:grid-cols-3 items-center relative z-20 pointer-events-none">
           {/* Left: Navigation Links */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 pointer-events-auto">
             <Link
               to="/discover"
               className="hover:text-slate-900 transition-colors"
@@ -210,22 +212,30 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Center: Hanging Logo Card */}
-          {/* Using flex justify-center inside the middle grid column ensures perfect centering */}
-          <div className="flex justify-start md:justify-center relative h-full">
-            <div className="absolute top-0 px-6 pt-5 pb-4 bg-white shadow-lg shadow-slate-200/50 rounded-b-2xl border-x border-b border-slate-100 z-10">
-              <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-slate-900">
-                <div className="w-6 h-6 bg-slate-900 rounded-sm flex items-center justify-center text-white text-xs">
-                  <Upload className="w-3 h-3" />
-                </div>
-                <span className="hidden lg:inline">ApexCollective</span>
-                <span className="lg:hidden">Apex</span>
-              </div>
+          {/* Center: DYNAMIC ISLAND LOGO */}
+          {/* This container hangs down from the top */}
+          <div className="flex justify-start md:justify-center relative h-full pointer-events-none">
+            {/* The Island Shape */}
+            <div className="absolute top-0 h-18 w-65 md:w-75 bg-white rounded-b-[40px] flex items-center justify-center shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] pointer-events-auto">
+              {/* Logo Content */}
+
+              <img
+                src="/images/Logo.svg"
+                alt=""
+                className="object-contain size-65"
+              />
+
+              {/* Left Smoothing Connector (The Magic Curve) */}
+              {/* Creates the smooth liquid transition from bar to dip */}
+              <div className="absolute top-0 -left-10 w-10 h-10 bg-[radial-gradient(circle_at_bottom_left,transparent_70%,white_70.5%)]"></div>
+
+              {/* Right Smoothing Connector */}
+              <div className="absolute top-0 -right-10 w-10 h-10 bg-[radial-gradient(circle_at_bottom_right,transparent_70%,white_70.5%)]"></div>
             </div>
           </div>
 
           {/* Right: Auth Buttons */}
-          <div className="flex items-center justify-end gap-4">
+          <div className="flex items-center justify-end gap-4 pointer-events-auto">
             <Link
               to="/auth/login"
               className="text-sm font-medium text-slate-600 hover:text-slate-900 hidden sm:block"
