@@ -2,7 +2,7 @@ import { MapPin, ExternalLink } from "lucide-react";
 
 export default function TalentCard({ data }: { data: any }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-2xl border border-gray-300 p-6 shadow-sm hover:shadow-md transition-shadow">
       {/* Header: Avatar, Name, Link */}
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-start gap-4">

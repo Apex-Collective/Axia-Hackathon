@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router"; 
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
+import { api } from "@/services/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email) {
@@ -15,9 +19,38 @@ export default function Login() {
       });
       return;
     }
-    toast.success("Check your inbox", {
-      description: `We've sent a magic link to ${email}.`
-    });
+
+    setIsLoading(true);
+
+    try {
+      await api.auth.login(email);
+      
+      toast.success("Check your inbox", {
+        description: `We've sent a magic link to ${email}.`
+      });
+      
+      // Pass email to the next screen so we can show it or use it for resending
+      navigate("/auth/magic-link", { state: { email } });
+
+    } catch (error: any) {
+      
+      
+      if (error.message === "Profile not verified.") {
+        toast.info("Profile Unverified", {
+          description: "Redirecting you to verify your account..."
+        });
+        // Send users to the page where they can finally click "Resend Magic Link"
+        navigate("/auth/magic-link", { state: { email } });
+        return;
+      }
+
+      // Default error for wrong email/server crash
+      toast.error("Login Failed", {
+        description: error.message || "Something went wrong. Please try again."
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,6 +74,7 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="px-10"
+                  disabled={isLoading}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <img 
@@ -62,9 +96,10 @@ export default function Login() {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-[#0f172a] text-white font-medium py-2.5 rounded-lg hover:bg-[#0f172a]/90 transition-colors cursor-pointer"
           >
-            Send Magic Link
+            {isLoading ? "Sending..." : "Send Magic Link"}
           </button>
         </form>
       </div>
