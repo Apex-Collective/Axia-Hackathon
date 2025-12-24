@@ -1,8 +1,14 @@
 // import { useEffect } from "react";
-import { Outlet } from "react-router"; 
+import { Outlet } from "react-router";
 // import { toast } from "sonner";
 import { ContentTabs } from "@/components/dashboard/ContentTabs";
 import Navbar from "@/components/dashboard/Navbar";
+import homeActive from "/icons/home-active.svg";
+import homeInActive from "/icons/home-inactive.svg";
+import discoveryActive from "/icons/discovery-active.svg";
+import discoveryInActive from "/icons/discovery-inactive.svg";
+import profileActive from "/icons/profile-active.svg";
+import profileInActive from "/icons/profile-inactive.svg";
 // import { api } from "@/services/api";
 
 // Define a context type for child components
@@ -19,29 +25,44 @@ export default function DashboardLayout() {
 
   // Define tabs
   const dashboardTabs = [
-    { label: "Home", path: "/dashboard" },
-    { label: "Discover", path: "/dashboard/discover" },
-    { label: "Profile", path: "/dashboard/profile" },
+    {
+      label: "Home",
+      path: "/dashboard",
+      activeIcon: homeActive,
+      inactiveIcon: homeInActive,
+    },
+    {
+      label: "Discover",
+      path: "/dashboard/discover",
+      activeIcon: discoveryActive,
+      inactiveIcon: discoveryInActive,
+    },
+    {
+      label: "Profile",
+      path: "/dashboard/profile",
+      activeIcon: profileActive,
+      inactiveIcon: profileInActive,
+    },
   ];
 
   // const fetchProfile = async () => {
-    // --- BYPASSING AUTH VALIDATION ---
-    // try {
-    //   const token = localStorage.getItem("authToken");
-    //   if (!token) {
-    //     throw new Error("No token found");
-    //   }
-      
-    //   const data = await api.profile.getMe();
-    //   setUser(data);
-    // } catch (error) {
-    //   // If unauthorized or error, redirect to login
-    //   console.error("Auth Error:", error);
-    //   toast.error("Session Expired", { description: "Please log in again." });
-    //   navigate("/auth/login", { state: { from: location.pathname } });
-    // } finally {
-      // setLoading(false);
-    // }
+  // --- BYPASSING AUTH VALIDATION ---
+  // try {
+  //   const token = localStorage.getItem("authToken");
+  //   if (!token) {
+  //     throw new Error("No token found");
+  //   }
+
+  //   const data = await api.profile.getMe();
+  //   setUser(data);
+  // } catch (error) {
+  //   // If unauthorized or error, redirect to login
+  //   console.error("Auth Error:", error);
+  //   toast.error("Session Expired", { description: "Please log in again." });
+  //   navigate("/auth/login", { state: { from: location.pathname } });
+  // } finally {
+  // setLoading(false);
+  // }
   // };
 
   // useEffect(() => {
@@ -59,8 +80,8 @@ export default function DashboardLayout() {
   return (
     <div className="relative min-h-screen bg-gray-50">
       {/* Pass user data to Navbar */}
-      <Navbar/>
-      
+      <Navbar />
+
       <main className="pt-16 pb-8">
         <div className="absolute flex justify-between w-full px-1 pointer-events-none">
           <img
@@ -74,10 +95,10 @@ export default function DashboardLayout() {
             className="w-50 scale-x-[-1] object-contain"
           />
         </div>
-        
+
         <div className="max-w-7xl z-10 mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
           <ContentTabs tabs={dashboardTabs} className="relative z-30" />
-          
+
           {/* Provide user data to all child routes (Home, Discover, Profile) */}
           <Outlet />
         </div>
