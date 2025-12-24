@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router"; 
+import { useNavigate } from "react-router";
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
-import { api } from "@/services/api";
+// import { api } from "@/services/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,47 +15,46 @@ export default function Login() {
 
     if (!email) {
       toast.error("Email Required", {
-        description: "Please enter your email address to continue."
+        description: "Please enter your email address to continue.",
       });
       return;
     }
 
     setIsLoading(true);
 
-    try {
-      await api.auth.login(email);
-      
-      toast.success("Check your inbox", {
-        description: `We've sent a magic link to ${email}.`
-      });
-      
-      // Pass email to the next screen so we can show it or use it for resending
-      navigate("/auth/magic-link", { state: { email } });
+    // --- BYPASSING LOGIN API CALL ---
+    // try {
+    //   await api.auth.login(email);
 
-    } catch (error: any) {
-      
-      
-      if (error.message === "Profile not verified.") {
-        toast.info("Profile Unverified", {
-          description: "Redirecting you to verify your account..."
-        });
-        // Send users to the page where they can finally click "Resend Magic Link"
-        navigate("/auth/magic-link", { state: { email } });
-        return;
-      }
+    toast.success("Check your inbox", {
+      description: `We've sent a magic link to ${email}.`,
+    });
 
-      // Default error for wrong email/server crash
-      toast.error("Login Failed", {
-        description: error.message || "Something went wrong. Please try again."
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    // Pass email to the next screen so we can show it or use it for resending
+    navigate("/auth/magic-link", { state: { email } });
+
+    // } catch (error: any) {
+
+    //   if (error.message === "Profile not verified.") {
+    //     toast.info("Profile Unverified", {
+    //       description: "Redirecting you to verify your account..."
+    //     });
+    //     // Send users to the page where they can finally click "Resend Magic Link"
+    //     navigate("/auth/magic-link", { state: { email } });
+    //     return;
+    //   }
+
+    //   // Default error for wrong email/server crash
+    //   toast.error("Login Failed", {
+    //     description: error.message || "Something went wrong. Please try again."
+    //   });
+    // } finally {
+    setIsLoading(false);
+    // }
   };
 
   return (
     <div className="w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 max-w-md">
-    
       <div className="p-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back</h1>
         <p className="text-gray-500 mb-6">
@@ -67,8 +66,8 @@ export default function Login() {
             <Field>
               <FieldLabel htmlFor="email">Email address</FieldLabel>
               <div className="relative">
-                <Input 
-                  id="email" 
+                <Input
+                  id="email"
                   type="email"
                   placeholder="scottowens@gmail.com"
                   value={email}
@@ -77,16 +76,16 @@ export default function Login() {
                   disabled={isLoading}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <img 
-                    src="/icons/help_icon.svg" 
-                    alt="mail" 
+                  <img
+                    src="/icons/help_icon.svg"
+                    alt="mail"
                     className="size-5 text-gray-400 opacity-50"
                   />
                 </div>
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <img 
-                    src="/icons/auth_mail_icon.svg" 
-                    alt="mail" 
+                  <img
+                    src="/icons/auth_mail_icon.svg"
+                    alt="mail"
                     className="size-5 text-gray-400 opacity-50"
                   />
                 </div>
