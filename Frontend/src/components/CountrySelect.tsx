@@ -58,7 +58,7 @@ export default function CountrySelect({
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent className="max-h-75 overflow-y-auto z-9999">
+      <SelectContent className="h-55 overflow-y-hidden z-9999">
         {options.map(({ value, label }) => (
           <SelectItem key={value} value={value}>
             {label}

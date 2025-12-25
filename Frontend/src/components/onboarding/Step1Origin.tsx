@@ -134,7 +134,7 @@ export function Step1Origin({ data, onUpdate, onNext }: Step1Props) {
         <Field>
           <FieldLabel>Which country do you live in?</FieldLabel>
           <CountrySelect
-            className="w-full"
+            className="w-full max-h-35"
             placeholder="Eg. Nigeria, South Africa, Ghana, etc"
             onChange={(val) => onUpdate({ country: val })}
           />

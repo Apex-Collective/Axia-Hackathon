@@ -1,33 +1,46 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/services/api";
 
 export default function MagicLinkSent() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  
-  // Retrieve the email from state, fallback if accessed directly
+
   const email = location.state?.email || "";
 
   const handleClick = async () => {
     if (!email) {
-      toast.error("Error", { description: "No email address found to resend link." });
+      toast.error("Error", {
+        description: "No email address found to resend link.",
+      });
       return;
     }
-
     setIsLoading(true);
     try {
       await api.auth.requestMagicLink(email);
       toast.success("Link Resent", {
-        description: "We've sent a new verification link to " + email
+        description: "We've sent a new verification link to " + email,
       });
-    } catch (error: any) {
-      toast.error("Error", { description: "Could not resend link." });
+    } catch (error) {
+      toast.error(`${error}`, {
+        description: "Could not resend link (Demo Mode).",
+      });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleDemoClick = () => {
+    // --- DEMO MODE UPDATE ---
+    // Navigate DIRECTLY to the dashboard.
+    // We pass the email in state just in case, but Dashboard will mostly use LocalStorage.
+    toast.success("Welcome Demo User", {
+      description: "Skipping verification...",
+    });
+    navigate("/dashboard");
   };
 
   return (
@@ -45,18 +58,27 @@ export default function MagicLinkSent() {
         </h1>
 
         <p className="text-gray-500 mb-8">
-          We'll send you a magic link to claim and manage your profil.
+          We'll send you a magic link to claim and manage your profile.
         </p>
 
         <div className="space-y-4 w-full">
           <button
-            onClick={handleClick}
+            onClick={handleDemoClick}
             type="button"
             disabled={isLoading}
             className="block w-full bg-brand-primary text-white font-medium py-2.5 rounded-lg hover:bg-brand-primary/90 transition-colors cursor-pointer"
           >
             {isLoading ? "Sending..." : "Send Magic Link"}
           </button>
+
+          {/* --- DEMO BUTTON --- */}
+          {/* <button
+            onClick={handleDemoClick}
+            type="button"
+            className="block w-full bg-green-600 text-white font-medium py-2.5 rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
+          >
+            Simulate Click (Demo)
+          </button> */}
 
           <div className="relative block w-65 mx-auto bg-[#fef5e7] border border-[#f59e0b] rounded-full p-3 text-sm text-[#f59e0b] hover:text-brand-primary transition-colors">
             Link expires in 15 minutes

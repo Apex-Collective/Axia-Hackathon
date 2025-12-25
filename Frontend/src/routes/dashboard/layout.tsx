@@ -13,7 +13,6 @@ import discoveryInActive from "/icons/discovery-inactive.svg";
 import profileActive from "/icons/profile-active.svg";
 import profileInActive from "/icons/profile-inactive.svg";
 
-// Define a context type for child components
 export type DashboardContextType = {
   user: any;
   refreshProfile: () => Promise<void>;
@@ -25,7 +24,6 @@ export default function DashboardLayout() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // Define tabs with icons
   const dashboardTabs = [
     {
       label: "Home",
@@ -47,46 +45,55 @@ export default function DashboardLayout() {
     },
   ];
 
-  // FIX: Wrap fetchProfile in useCallback to stabilize it
   const fetchProfile = useCallback(async () => {
     try {
-      // 1. Fetch the profile
+      // 1. Try to fetch from Backend
       let data = await api.profile.getMe();
-
-      // 2. [Frontend Patch] If backend returns empty 'about' data, fill it from LocalStorage
-      if (!data.about || !data.about.fullName) {
-        const cachedData = localStorage.getItem("temp_user_data");
-        if (cachedData) {
-          const { fullName, email } = JSON.parse(cachedData);
-          
-          // Merge cached data into the user object structure
-          data = {
-            ...data,
-            about: {
-              ...data.about,
-              fullName: fullName || "User",
-              email: email || "user@example.com",
-            }
-          };
-        }
-      }
-
       setUser(data);
     } catch (error) {
-      console.error("Auth Error:", error);
-      toast.error("Session Expired", { description: "Please log in again." });
-      // We use location.pathname here, so it's a dependency
-      navigate("/auth/login", { state: { from: location.pathname } });
+      console.log(
+        "Backend offline or auth failed. Checking LocalStorage for Demo Mode..."
+      );
+
+      // 2. DEMO MODE FALLBACK (The Fix)
+      // Instead of redirecting to login immediately, we check if we have local data.
+      const cachedData = localStorage.getItem("temp_user_data");
+
+      if (cachedData) {
+        const local = JSON.parse(cachedData);
+
+        // Construct a Mock User object that matches what the backend WOULD return
+        const mockUser = {
+          _id: "demo_user_id",
+          email: local.email,
+          about: {
+            fullName: local.fullName || "Demo User",
+            title: local.role || "Creator",
+            bio: local.bio || "This is a demo account.",
+            location: local.country || "Remote",
+            email: local.email,
+          },
+          skills: local.skills ? local.skills.split(",") : [],
+          experience: local.experience || "0",
+          tools: local.tools || "",
+        };
+
+        setUser(mockUser);
+        // CRITICAL: We do NOT navigate away. We stay on the dashboard.
+      } else {
+        // Only if we have NO backend AND NO local data do we kick the user out.
+        toast.error("Session Expired", { description: "Please log in again." });
+        navigate("/auth/login", { state: { from: location.pathname } });
+      }
     } finally {
       setLoading(false);
     }
-  }, [navigate, location.pathname]); // Dependencies for the function itself
+  }, [navigate, location.pathname]);
 
   useEffect(() => {
     fetchProfile();
-  }, [fetchProfile]); // Now we can safely list it here without infinite loops
+  }, [fetchProfile]);
 
-  // Loading State
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-gray-50">
@@ -97,7 +104,6 @@ export default function DashboardLayout() {
 
   return (
     <div className="relative min-h-screen bg-gray-50">
-      {/* Pass user data to Navbar so name/email appears */}
       <Navbar user={user} />
 
       <main className="pt-16 pb-8">
@@ -116,9 +122,14 @@ export default function DashboardLayout() {
 
         <div className="max-w-7xl z-10 mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
           <ContentTabs tabs={dashboardTabs} className="relative z-30" />
-
-          {/* Provide user data to all child routes */}
-          <Outlet context={{ user, refreshProfile: fetchProfile } satisfies DashboardContextType} />
+          <Outlet
+            context={
+              {
+                user,
+                refreshProfile: fetchProfile,
+              } satisfies DashboardContextType
+            }
+          />
         </div>
       </main>
     </div>

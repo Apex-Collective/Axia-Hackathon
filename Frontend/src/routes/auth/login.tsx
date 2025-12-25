@@ -3,7 +3,6 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
-// import { api } from "@/services/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -22,35 +21,29 @@ export default function Login() {
 
     setIsLoading(true);
 
-    // --- BYPASSING LOGIN API CALL ---
-    // try {
-    //   await api.auth.login(email);
+    // --- DEMO MODE: SIMULATE LOGIN ---
+    // Update the stored email, preserving other mock data if it exists
+    const existingData = localStorage.getItem("temp_user_data");
+    const parsedData = existingData ? JSON.parse(existingData) : {};
 
-    toast.success("Check your inbox", {
-      description: `We've sent a magic link to ${email}.`,
-    });
+    localStorage.setItem(
+      "temp_user_data",
+      JSON.stringify({
+        ...parsedData,
+        email: email, // Update email to the one just entered
+        fullName: parsedData.fullName || "Demo User", // Fallback name if starting fresh
+      })
+    );
 
-    // Pass email to the next screen so we can show it or use it for resending
-    navigate("/auth/magic-link", { state: { email } });
+    // Simulate network delay
+    setTimeout(() => {
+      toast.success("Check your inbox", {
+        description: `We've sent a magic link to ${email}.`,
+      });
 
-    // } catch (error: any) {
-
-    //   if (error.message === "Profile not verified.") {
-    //     toast.info("Profile Unverified", {
-    //       description: "Redirecting you to verify your account..."
-    //     });
-    //     // Send users to the page where they can finally click "Resend Magic Link"
-    //     navigate("/auth/magic-link", { state: { email } });
-    //     return;
-    //   }
-
-    //   // Default error for wrong email/server crash
-    //   toast.error("Login Failed", {
-    //     description: error.message || "Something went wrong. Please try again."
-    //   });
-    // } finally {
-    setIsLoading(false);
-    // }
+      navigate("/dashboard", { state: { email } });
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (

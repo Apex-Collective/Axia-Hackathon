@@ -9,9 +9,9 @@ interface NavbarProps {
 
 export default function Navbar({ user }: NavbarProps) {
   // Safe extraction of user details
-  const firstName = user?.about?.fullName?.split(" ")[0] || "User";
   const fullName = user?.about?.fullName || "Guest User";
   const email = user?.about?.email || "guest@example.com";
+
   // Fallback initials
   const initials = fullName
     .split(" ")
@@ -52,7 +52,7 @@ export default function Navbar({ user }: NavbarProps) {
             </Avatar>
             <div className="hidden md:flex flex-col justify-start">
               <p className="text-sm font-semibold text-brand-primary leading-tight">
-                {firstName}
+                {fullName}
               </p>
               <p className="text-xs text-brand-primary/60">{email}</p>
             </div>
