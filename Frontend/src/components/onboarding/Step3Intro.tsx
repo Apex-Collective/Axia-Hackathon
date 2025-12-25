@@ -14,7 +14,14 @@ export function Step3Intro({ data, onUpdate, onSubmit }: Step3Props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!data.bio || data.bio.trim().length === 0) {
+    // 1. Trim input
+    const cleanBio = data.bio?.trim() || "";
+
+    // 2. Update parent state
+    onUpdate({ bio: cleanBio });
+
+    // 3. Validation
+    if (!cleanBio) {
       toast.error("Bio Required", {
         description: "Please write a short bio to introduce yourself."
       });

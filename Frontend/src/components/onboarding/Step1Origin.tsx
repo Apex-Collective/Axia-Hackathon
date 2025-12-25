@@ -17,22 +17,55 @@ export function Step1Origin({ data, onUpdate, onNext }: Step1Props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate inputs
-    if (!data.fullName) {
+    // 1. Trim the inputs to remove accidental spaces
+    const cleanName = data.fullName?.trim() || "";
+    const cleanEmail = data.email?.trim() || "";
+
+    // 2. Update the parent state with the cleaned values immediately
+    onUpdate({
+      fullName: cleanName,
+      email: cleanEmail,
+    });
+
+    // 3. Validation Logic
+
+    // Check Name
+    if (!cleanName) {
       toast.error("Full Name Required", {
-        description: "Please enter your full name to continue."
+        description: "Please enter your full name to continue.",
       });
       return;
     }
-    if (!data.email) {
+
+    if (cleanName.length < 2) {
+      toast.error("Invalid Name", {
+        description: "Name must be at least 2 characters long.",
+      });
+      return;
+    }
+
+    // Check Email (Existence + Basic Regex)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!cleanEmail) {
       toast.error("Email Required", {
-        description: "Please enter a valid email address."
+        description: "Please enter a valid email address.",
       });
       return;
     }
+
+    if (!emailRegex.test(cleanEmail)) {
+      toast.error("Invalid Email", {
+        description:
+          "Please enter a valid email address (e.g. user@example.com).",
+      });
+      return;
+    }
+
+    // Check Country
     if (!data.country) {
       toast.error("Country Required", {
-        description: "Please select your country of residence."
+        description: "Please select your country of residence.",
       });
       return;
     }
