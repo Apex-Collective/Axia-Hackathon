@@ -18,25 +18,43 @@ export function Step2Work({ data, onUpdate, onNext }: Step2Props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!data.jobTitle) {
+    // 1. Trim inputs
+    const cleanJobTitle = data.jobTitle?.trim() || "";
+    const cleanSkills = data.skills?.trim() || "";
+    const cleanExperience = data.experience?.trim() || "";
+    const cleanTools = data.tools?.trim() || "";
+
+    // 2. Update parent state with clean values
+    onUpdate({
+      jobTitle: cleanJobTitle,
+      skills: cleanSkills,
+      experience: cleanExperience,
+      tools: cleanTools
+    });
+
+    // 3. Validation on clean values
+    if (!cleanJobTitle) {
       toast.error("Job Title Required", {
         description: "Please enter your current job title."
       });
       return;
     }
-    if (!data.skills) {
+    
+    if (!cleanSkills) {
       toast.error("Skills Required", {
         description: "Please list your key professional skills."
       });
       return;
     }
-    if (!data.experience) {
+
+    if (!cleanExperience) {
       toast.error("Experience Required", {
         description: "Please enter your years of professional experience."
       });
       return;
     }
-    if (!data.tools) {
+
+    if (!cleanTools) {
       toast.error("Tools Required", {
         description: "Please list the tools you are proficient in."
       });

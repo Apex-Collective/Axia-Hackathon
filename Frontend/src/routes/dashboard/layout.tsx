@@ -1,29 +1,31 @@
-// import { useEffect } from "react";
-import { Outlet } from "react-router";
-// import { toast } from "sonner";
+import { useEffect, useState, useCallback } from "react";
+import { Outlet, useNavigate, useLocation } from "react-router";
+import { toast } from "sonner";
 import { ContentTabs } from "@/components/dashboard/ContentTabs";
 import Navbar from "@/components/dashboard/Navbar";
+import { api } from "@/services/api";
+
+// Import Icons
 import homeActive from "/icons/home-active.svg";
 import homeInActive from "/icons/home-inactive.svg";
 import discoveryActive from "/icons/discovery-active.svg";
 import discoveryInActive from "/icons/discovery-inactive.svg";
 import profileActive from "/icons/profile-active.svg";
 import profileInActive from "/icons/profile-inactive.svg";
-// import { api } from "@/services/api";
 
 // Define a context type for child components
-// export type DashboardContextType = {
-//   user: any;
-//   refreshProfile: () => Promise<void>;
-// };
+export type DashboardContextType = {
+  user: any;
+  refreshProfile: () => Promise<void>;
+};
 
 export default function DashboardLayout() {
-  // const navigate = useNavigate();
-  // const location = useLocation();
-  // const [user, setUser] = useState<any>(null);
-  // const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Define tabs
+  // Define tabs with icons
   const dashboardTabs = [
     {
       label: "Home",
@@ -45,42 +47,58 @@ export default function DashboardLayout() {
     },
   ];
 
-  // const fetchProfile = async () => {
-  // --- BYPASSING AUTH VALIDATION ---
-  // try {
-  //   const token = localStorage.getItem("authToken");
-  //   if (!token) {
-  //     throw new Error("No token found");
-  //   }
+  // FIX: Wrap fetchProfile in useCallback to stabilize it
+  const fetchProfile = useCallback(async () => {
+    try {
+      // 1. Fetch the profile
+      let data = await api.profile.getMe();
 
-  //   const data = await api.profile.getMe();
-  //   setUser(data);
-  // } catch (error) {
-  //   // If unauthorized or error, redirect to login
-  //   console.error("Auth Error:", error);
-  //   toast.error("Session Expired", { description: "Please log in again." });
-  //   navigate("/auth/login", { state: { from: location.pathname } });
-  // } finally {
-  // setLoading(false);
-  // }
-  // };
+      // 2. [Frontend Patch] If backend returns empty 'about' data, fill it from LocalStorage
+      if (!data.about || !data.about.fullName) {
+        const cachedData = localStorage.getItem("temp_user_data");
+        if (cachedData) {
+          const { fullName, email } = JSON.parse(cachedData);
+          
+          // Merge cached data into the user object structure
+          data = {
+            ...data,
+            about: {
+              ...data.about,
+              fullName: fullName || "User",
+              email: email || "user@example.com",
+            }
+          };
+        }
+      }
 
-  // useEffect(() => {
-  //   fetchProfile();
-  // }, [navigate]);
+      setUser(data);
+    } catch (error) {
+      console.error("Auth Error:", error);
+      toast.error("Session Expired", { description: "Please log in again." });
+      // We use location.pathname here, so it's a dependency
+      navigate("/auth/login", { state: { from: location.pathname } });
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, location.pathname]); // Dependencies for the function itself
 
-  // if (loading) {
-  //   return (
-  //     <div className="flex h-screen w-full items-center justify-center bg-gray-50">
-  //       <div className="size-10 animate-spin rounded-full border-4 border-gray-200 border-t-black" />
-  //     </div>
-  //   );
-  // }
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]); // Now we can safely list it here without infinite loops
+
+  // Loading State
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-gray-50">
+        <div className="size-10 animate-spin rounded-full border-4 border-gray-200 border-t-black" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-gray-50">
-      {/* Pass user data to Navbar */}
-      <Navbar />
+      {/* Pass user data to Navbar so name/email appears */}
+      <Navbar user={user} />
 
       <main className="pt-16 pb-8">
         <div className="absolute flex justify-between w-full px-1 pointer-events-none">
@@ -99,8 +117,8 @@ export default function DashboardLayout() {
         <div className="max-w-7xl z-10 mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
           <ContentTabs tabs={dashboardTabs} className="relative z-30" />
 
-          {/* Provide user data to all child routes (Home, Discover, Profile) */}
-          <Outlet />
+          {/* Provide user data to all child routes */}
+          <Outlet context={{ user, refreshProfile: fetchProfile } satisfies DashboardContextType} />
         </div>
       </main>
     </div>

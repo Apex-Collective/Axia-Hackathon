@@ -30,10 +30,9 @@ export default function SignUp() {
     setFormData((prev) => ({ ...prev, ...newData }));
   };
 
-  const handleFinalSubmit = async () => {
+ const handleFinalSubmit = async () => {
     setIsSubmitting(true);
 
-    // Map your form state to the API expected format
     const payload: RegisterPayload = {
       name: formData.fullName,
       email: formData.email,
@@ -48,6 +47,12 @@ export default function SignUp() {
     try {
       await api.auth.register(payload);
       
+      // [NEW] Save basic info to LocalStorage so we can show it on the Dashboard immediately
+      localStorage.setItem("temp_user_data", JSON.stringify({
+        fullName: formData.fullName,
+        email: formData.email
+      }));
+
       toast.success("Account Created", {
         description: "Please check your email to verify your profile."
       });
@@ -62,7 +67,7 @@ export default function SignUp() {
       setIsSubmitting(false);
     }
   };
-
+  
   return (
     <>
       {step === 1 && (
