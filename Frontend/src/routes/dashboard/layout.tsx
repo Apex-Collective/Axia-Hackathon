@@ -39,7 +39,7 @@ export default function DashboardLayout() {
     },
     {
       label: "Profile",
-      path: "/dashboard/profile",
+      path: "/dashboard/profile/preview",
       activeIcon: profileActive,
       inactiveIcon: profileInActive,
     },
@@ -48,11 +48,11 @@ export default function DashboardLayout() {
   const fetchProfile = useCallback(async () => {
     try {
       // 1. Try to fetch from Backend
-      let data = await api.profile.getMe();
+      const data = await api.profile.getMe();
       setUser(data);
     } catch (error) {
       console.log(
-        "Backend offline or auth failed. Checking LocalStorage for Demo Mode..."
+        `Backend offline or auth failed. Checking LocalStorage for Demo Mode. ${error}`
       );
 
       // 2. DEMO MODE FALLBACK (The Fix)

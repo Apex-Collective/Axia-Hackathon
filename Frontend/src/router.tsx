@@ -8,7 +8,8 @@ import HomePage from "./routes/_index";
 import DashboardLayout from "./routes/dashboard/layout";
 import DashboardHomePage from "./routes/dashboard/page";
 import DashboardDiscoverPage from "./routes/dashboard/discover";
-import DashboardProfilePage from "./routes/dashboard/profile";
+import ProfileOverviewPage from "./routes/dashboard/profile/profileOverview";
+import ProfileLayout from "./routes/dashboard/profile/layout";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
@@ -19,9 +20,17 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardHomePage /> },
       { path: "discover", element: <DashboardDiscoverPage /> },
-      { path: "profile", element: <DashboardProfilePage /> },
+      {
+        path: "profile",
+        element: <ProfileLayout />,
+        children: [
+          // { path: "edit", element: <DashboardDiscoverPage /> },
+          { path: "preview", element: <ProfileOverviewPage /> },
+        ],
+      },
     ],
   },
+
   {
     path: "auth",
     element: <AuthLayout />,
