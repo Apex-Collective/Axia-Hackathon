@@ -13,8 +13,8 @@ export default function VerifyMagicLink() {
       const token = searchParams.get("token");
       const email = searchParams.get("email");
 
-      if (!token || !email) {
-        toast.error("Invalid Link", { description: "Missing token or email." });
+      if (!token) {
+        toast.error("Invalid Link", { description: "Missing token." });
         navigate("/auth/login");
         return;
       }
@@ -22,8 +22,18 @@ export default function VerifyMagicLink() {
       if (verified.current) return;
       verified.current = true;
 
+      // --- DEMO MODE HANDLER ---
+      if (token === "demo") {
+        setTimeout(() => {
+          toast.success("Verified!", { description: "Welcome back (Demo Mode)." });
+          navigate("/dashboard");
+        }, 1500); // 1.5s delay for spinner effect
+        return;
+      }
+      // -------------------------
+
       try {
-        await api.auth.verifyMagicLink(token, email);
+        await api.auth.verifyMagicLink(token, email || "");
         toast.success("Verified!", { description: "Welcome back." });
         navigate("/dashboard"); 
       } catch (error: any) {
@@ -41,7 +51,10 @@ export default function VerifyMagicLink() {
     <div className="w-full h-screen flex items-center justify-center bg-[#fcfcfd]">
       <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 text-center">
          <h1 className="text-xl font-bold text-gray-900 mb-2">Verifying...</h1>
-         <p className="text-gray-500">Please wait while we log you in.</p>
+         <div className="mt-4 flex justify-center">
+            <div className="size-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
+         </div>
+         <p className="text-gray-500 mt-4">Please wait while we log you in.</p>
       </div>
     </div>
   );

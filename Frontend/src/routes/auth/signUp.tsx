@@ -5,7 +5,7 @@ import { WizardLayout } from "@/components/onboarding/WizardLayout";
 import { Step1Origin } from "@/components/onboarding/Step1Origin";
 import { Step2Work } from "@/components/onboarding/Step2Work";
 import { Step3Intro } from "@/components/onboarding/Step3Intro";
-import { api, type RegisterPayload } from "@/services/api";
+// import { api, type RegisterPayload } from "@/services/api"; // API not needed for demo
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -30,38 +30,35 @@ export default function SignUp() {
     setFormData((prev) => ({ ...prev, ...newData }));
   };
 
- const handleFinalSubmit = async () => {
+  const handleFinalSubmit = async () => {
     setIsSubmitting(true);
 
-    const payload: RegisterPayload = {
-      name: formData.fullName,
-      email: formData.email,
-      country: formData.country,
-      role: formData.jobTitle,
-      skills: formData.skills,
-      yearsOfExperience: formData.experience,
-      tools: formData.tools,
-      introduction: formData.bio,
-    };
-
     try {
-      await api.auth.register(payload);
-      
-      // [NEW] Save basic info to LocalStorage so we can show it on the Dashboard immediately
+      // --- DEMO MODE: SAVE TO LOCAL STORAGE ---
+      // We save the raw form data so we can reconstruct the user profile in Dashboard
       localStorage.setItem("temp_user_data", JSON.stringify({
         fullName: formData.fullName,
-        email: formData.email
+        email: formData.email,
+        country: formData.country,
+        role: formData.jobTitle,
+        skills: formData.skills,
+        experience: formData.experience,
+        tools: formData.tools,
+        bio: formData.bio,
       }));
 
-      toast.success("Account Created", {
-        description: "Please check your email to verify your profile."
+      // Simulate a brief network delay for realism
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      toast.success("Account Created (Demo)", {
+        description: "Profile saved locally. Proceeding to verification."
       });
       
       navigate("/auth/magic-link", { state: { email: formData.email } });
       
     } catch (error: any) {
       toast.error("Registration Failed", {
-        description: error.message || "An error occurred during registration."
+        description: "Could not save demo data."
       });
     } finally {
       setIsSubmitting(false);
@@ -110,8 +107,6 @@ export default function SignUp() {
             onUpdate={updateData}
             onSubmit={handleFinalSubmit}
             onBack={prevStep}
-            // Passing isLoading if your Step3Intro component supports a loading prop for the button
-            // If not, it will simply ignore this prop without breaking.
             // @ts-ignore 
             isLoading={isSubmitting}
           />
