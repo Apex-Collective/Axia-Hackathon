@@ -1,37 +1,37 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { X } from "lucide-react";
 import { toast } from "sonner";
-import { api } from "@/services/api";
+// import { api } from "@/services/api";
 
 export default function MagicLinkSent() {
-  const location = useLocation();
+  // const location = useLocation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  const email = location.state?.email || "";
+  // const email = location.state?.email || "";
 
-  const handleClick = async () => {
-    if (!email) {
-      toast.error("Error", {
-        description: "No email address found to resend link.",
-      });
-      return;
-    }
-    setIsLoading(true);
-    try {
-      await api.auth.requestMagicLink(email);
-      toast.success("Link Resent", {
-        description: "We've sent a new verification link to " + email,
-      });
-    } catch (error) {
-      toast.error(`${error}`, {
-        description: "Could not resend link (Demo Mode).",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const handleClick = async () => {
+  //   if (!email) {
+  //     toast.error("Error", {
+  //       description: "No email address found to resend link.",
+  //     });
+  //     return;
+  //   }
+  //   setIsLoading(true);
+  //   try {
+  //     await api.auth.requestMagicLink(email);
+  //     toast.success("Link Resent", {
+  //       description: "We've sent a new verification link to " + email,
+  //     });
+  //   } catch (error) {
+  //     toast.error(`${error}`, {
+  //       description: "Could not resend link (Demo Mode).",
+  //     });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleDemoClick = () => {
     // --- DEMO MODE UPDATE ---
@@ -40,6 +40,7 @@ export default function MagicLinkSent() {
     toast.success("Welcome Demo User", {
       description: "Skipping verification...",
     });
+    setIsLoading(true);
     navigate("/dashboard");
   };
 
