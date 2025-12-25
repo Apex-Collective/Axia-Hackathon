@@ -139,10 +139,10 @@ export default function DiscoverPage() {
   return (
     <div className="z-10 min-h-screen bg-white text-gray-900 font-sans">
       {/* --- Main Content Container --- */}
-      <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-8">
+      <div className="max-w-300 mx-auto px-4 md:px-6 py-8">
         {/* --- Hero Section --- */}
         <div className="mb-10 text-center md:text-left relative">
-          <div className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none bg-[radial-gradient(circle,_#000_1px,_transparent_1px)] bg-[length:8px_8px]"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none bg-[radial-gradient(circle,#000_1px,transparent_1px)] bg-size-[8px_8px]"></div>
           <h1 className="text-4xl font-bold mb-2 flex items-center gap-2">
             Discover your talent! <span className="text-3xl">🧭</span>
           </h1>
@@ -172,7 +172,7 @@ export default function DiscoverPage() {
         <JobCategoryCarousel />
 
         {/* --- Talent Grid --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16 min-h-[400px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16 min-h-100">
           {currentData.length > 0 ? (
             currentData.map((talent) => (
               <TalentCard key={talent.id} data={talent} />
