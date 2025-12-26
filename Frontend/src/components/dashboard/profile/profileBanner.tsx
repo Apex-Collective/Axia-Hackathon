@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { MapPin, Linkedin, Twitter, Instagram, CloudUpload } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface UserData {
   fullName: string;
@@ -43,6 +44,14 @@ export function ProfileBanner() {
   const visibleSkills = ["React", "JavaScript", "CSS", "Bootstrap", "Git"];
   const hiddenCount = Math.max(0, allSkills.length - 5);
 
+  // 4. Generate Initials from Display Name
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
   return (
     <div className="w-full bg-white rounded-2xl border border-gray-200 p-6 mb-8">
       {/* Upload/Banner Zone */}
@@ -60,14 +69,18 @@ export function ProfileBanner() {
       <div className="px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end -mt-12 mb-6">
           <div className="relative">
-            {/* Avatar */}
-            <div className="w-32 h-32 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-sm flex items-center justify-center text-3xl font-bold text-gray-400">
-               {/* Placeholder Image */}
-               <img 
-                src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=2662&auto=format&fit=crop" 
-                alt="Profile" 
-                className="w-full h-full object-cover"
-              />
+            {/* Avatar with Initials Fallback */}
+            <div className="rounded-full border-4 border-white bg-white overflow-hidden shadow-sm">
+              <Avatar className="w-32 h-32">
+                <AvatarImage 
+                  src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=2662&auto=format&fit=crop" 
+                  alt="Profile" 
+                  className="object-cover"
+                />
+                <AvatarFallback className="bg-gray-200 text-3xl font-bold text-gray-500">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
             </div>
             
             <div className="mt-4">
