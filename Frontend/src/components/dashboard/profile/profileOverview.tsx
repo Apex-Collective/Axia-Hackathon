@@ -99,9 +99,16 @@ export function ProfileOverview() {
                 </div>
             ))
           ) : (
-             /* Fallback if empty */
-             <div className="flex flex-col gap-1 opacity-60">
-                <p className="text-gray-500 text-sm">No experience added yet.</p>
+             /* Fallback: Uses the variables we defined to show something if the list is empty */
+             <div className="flex flex-col gap-1">
+                <div className="flex justify-between items-start">
+                  <h4 className="font-bold text-gray-900 capitalize">{displayRole}</h4>
+                  <span className="text-xs text-green-600 bg-green-50 border border-green-100 px-2 py-0.5 rounded-full">
+                    Current
+                  </span>
+                </div>
+                <p className="text-gray-500 text-sm capitalize">Freelance / Contract • {displayLocation}</p>
+                <p className="text-xs text-gray-400 mt-1">{displayExp}</p>
              </div>
           )}
 
