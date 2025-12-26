@@ -31,7 +31,7 @@ export function ProfileBanner() {
   const displayName = user?.fullName || "Your Name";
   // Check both 'role' and 'jobTitle' keys depending on how it was saved
   const displayRole = user?.role || user?.jobTitle || "Software Engineer"; 
-  const displayLocation = user?.country || "Remote";
+  const displayLocation = /* user?.country ||  */"Lagos, Nigeria";
   
   // 3. Process Skills (Split string into array)
   const getSkillsList = () => {
@@ -40,7 +40,7 @@ export function ProfileBanner() {
   };
 
   const allSkills = getSkillsList();
-  const visibleSkills = allSkills.slice(0, 5);
+  const visibleSkills = ["React", "JavaScript", "CSS", "Bootstrap", "Git"];
   const hiddenCount = Math.max(0, allSkills.length - 5);
 
   return (
@@ -73,19 +73,20 @@ export function ProfileBanner() {
             <div className="mt-4">
               <h1 className="text-2xl font-bold text-gray-900 capitalize">{displayName}</h1>
               <div className="flex flex-wrap items-center gap-3 mt-2">
-                <Badge className="bg-[#F4F3FF] text-[#5925DC] hover:bg-[#ebe9fe] border-purple-100 px-3 py-1 text-xs rounded-full pointer-events-none capitalize">
+                <Badge className="bg-[#dbd8fc] text-gray-900 hover:bg-[#ebe9fe] border-gray-900 px-3 py-1 text-md rounded-full pointer-events-none capitalize">
                   {displayRole}
                 </Badge>
-                <div className="flex items-center text-gray-500 text-sm capitalize">
-                  <MapPin className="w-4 h-4 mr-1" />
-                  {displayLocation}
-                </div>
+                
               </div>
             </div>
           </div>
 
           {/* Social Actions */}
           <div className="flex gap-3 mt-4 md:mt-0">
+            <div className="flex items-center text-gray-500 text-sm capitalize">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  {displayLocation}
+                </div>
             <Button variant="outline" size="icon" className="rounded-full w-10 h-10 border-gray-200 text-gray-600 hover:text-black">
               <Linkedin className="w-4 h-4" />
             </Button>

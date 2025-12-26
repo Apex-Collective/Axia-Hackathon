@@ -26,19 +26,17 @@ export function ProfileOverview() {
   }, []);
 
   // 2. Helper to split comma-separated strings
-  const getList = (str?: string) => {
-    if (!str) return [];
-    return str.split(",").map((s) => s.trim()).filter(Boolean);
-  };
+  // const getList = (str?: string) => {
+  //   if (!str) return [];
+  //   return str.split(",").map((s) => s.trim()).filter(Boolean);
+  // };
 
   // 3. Fallbacks
   const displayBio = user?.bio || "I am passionate about supporting people and solving problems by sharing my knowledge and skills.";
   const displayRole = user?.role || user?.jobTitle || "Product Designer";
   const displayExp = user?.experience ? `${user.experience} Years Experience` : "Mid-Level";
   const displayLocation = user?.country || "Remote";
-  const displaySkills = getList(user?.skills).length > 0 
-    ? getList(user?.skills) 
-    : ["User Experience", "User Interface", "Time Management"];
+  const displaySkills = ["User Experience", "User Interface", "Time Management"];
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
