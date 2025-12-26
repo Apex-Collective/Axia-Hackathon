@@ -10,6 +10,7 @@ import DashboardHomePage from "./routes/dashboard/page";
 import DashboardDiscoverPage from "./routes/dashboard/discover";
 import ProfileOverviewPage from "./routes/dashboard/profile/profileOverview";
 import ProfileLayout from "./routes/dashboard/profile/layout";
+import EditProfilePage from "./routes/dashboard/profile/editProfile";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
         path: "profile",
         element: <ProfileLayout />,
         children: [
-          // { path: "edit", element: <DashboardDiscoverPage /> },
+          { path: "edit", element: <EditProfilePage /> },
           { path: "preview", element: <ProfileOverviewPage /> },
         ],
       },
