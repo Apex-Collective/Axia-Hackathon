@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { MapPin, Linkedin, Twitter, Instagram, CloudUpload } from "lucide-react";
+import {
+  MapPin,
+  Linkedin,
+  Twitter,
+  Instagram,
+  CloudUpload,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,9 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface UserData {
   fullName: string;
   country: string;
-  role: string;     // Note: specific mapping might be needed if saved as 'jobTitle'
+  role: string; // Note: specific mapping might be needed if saved as 'jobTitle'
   jobTitle?: string; // Fallback for the key name saved in SignUp
-  skills: string;   // Comma separated string
+  skills: string; // Comma separated string
 }
 
 export function ProfileBanner() {
@@ -31,13 +37,16 @@ export function ProfileBanner() {
   // 2. Prepare Display Data (with Fallbacks)
   const displayName = user?.fullName || "Your Name";
   // Check both 'role' and 'jobTitle' keys depending on how it was saved
-  const displayRole = user?.role || user?.jobTitle || "Software Engineer"; 
-  const displayLocation = /* user?.country ||  */"Lagos, Nigeria";
-  
+  const displayRole = user?.role || user?.jobTitle || "Software Engineer";
+  const displayLocation = /* user?.country ||  */ "Lagos, Nigeria";
+
   // 3. Process Skills (Split string into array)
   const getSkillsList = () => {
     if (!user?.skills) return ["React", "JavaScript", "Design"]; // Default
-    return user.skills.split(",").map(s => s.trim()).filter(Boolean);
+    return user.skills
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
   };
 
   const allSkills = getSkillsList();
@@ -60,9 +69,12 @@ export function ProfileBanner() {
           <CloudUpload className="text-gray-600 w-6 h-6" />
         </div>
         <p className="text-blue-600 font-semibold text-sm mb-1">
-          Click to upload <span className="text-gray-500 font-normal">or drag and drop</span>
+          Click to upload{" "}
+          <span className="text-gray-500 font-normal">or drag and drop</span>
         </p>
-        <p className="text-gray-400 text-xs">SVG, PNG, JPG or GIF (max. 800×400px)</p>
+        <p className="text-gray-400 text-xs">
+          SVG, PNG, JPG or GIF (max. 800×400px)
+        </p>
       </div>
 
       {/* Profile Info Section */}
@@ -70,11 +82,11 @@ export function ProfileBanner() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end -mt-12 mb-6">
           <div className="relative">
             {/* Avatar with Initials Fallback */}
-            <div className="rounded-full border-4 border-white bg-white overflow-hidden shadow-sm">
+            <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden shadow-sm">
               <Avatar className="w-32 h-32">
-                <AvatarImage 
-                  src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=2662&auto=format&fit=crop" 
-                  alt="Profile" 
+                <AvatarImage
+                  src="https://image.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=2662&auto=format&fit=crop"
+                  alt="Profile"
                   className="object-cover"
                 />
                 <AvatarFallback className="bg-gray-200 text-3xl font-bold text-gray-500">
@@ -82,14 +94,15 @@ export function ProfileBanner() {
                 </AvatarFallback>
               </Avatar>
             </div>
-            
+
             <div className="mt-4">
-              <h1 className="text-2xl font-bold text-gray-900 capitalize">{displayName}</h1>
+              <h1 className="text-2xl font-bold text-gray-900 capitalize">
+                {displayName}
+              </h1>
               <div className="flex flex-wrap items-center gap-3 mt-2">
                 <Badge className="bg-[#dbd8fc] text-gray-900 hover:bg-[#ebe9fe] border-gray-900 px-3 py-1 text-md rounded-full pointer-events-none capitalize">
                   {displayRole}
                 </Badge>
-                
               </div>
             </div>
           </div>
@@ -97,16 +110,28 @@ export function ProfileBanner() {
           {/* Social Actions */}
           <div className="flex gap-3 mt-4 md:mt-0">
             <div className="flex items-center text-gray-500 text-sm capitalize">
-                  <MapPin className="w-4 h-4 mr-1" />
-                  {displayLocation}
-                </div>
-            <Button variant="outline" size="icon" className="rounded-full w-10 h-10 border-gray-200 text-gray-600 hover:text-black">
+              <MapPin className="w-4 h-4 mr-1" />
+              {displayLocation}
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full w-10 h-10 border-gray-200 text-gray-600 hover:text-black"
+            >
               <Linkedin className="w-4 h-4" />
             </Button>
-            <Button variant="outline" size="icon" className="rounded-full w-10 h-10 border-gray-200 text-gray-600 hover:text-black">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full w-10 h-10 border-gray-200 text-gray-600 hover:text-black"
+            >
               <Twitter className="w-4 h-4" />
             </Button>
-            <Button variant="outline" size="icon" className="rounded-full w-10 h-10 border-gray-200 text-gray-600 hover:text-black">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full w-10 h-10 border-gray-200 text-gray-600 hover:text-black"
+            >
               <Instagram className="w-4 h-4" />
             </Button>
           </div>
@@ -116,18 +141,21 @@ export function ProfileBanner() {
         <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-gray-100 gap-4">
           <div className="flex flex-wrap gap-3">
             {visibleSkills.map((skill, i) => (
-              <div key={i} className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-lg bg-white shadow-sm text-sm font-medium text-gray-700 capitalize">
+              <div
+                key={i}
+                className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-lg bg-white shadow-sm text-sm font-medium text-gray-700 capitalize"
+              >
                 <span>{skill}</span>
               </div>
             ))}
-            
+
             {hiddenCount > 0 && (
               <div className="px-3 py-1.5 border border-gray-200 rounded-lg bg-gray-50 text-sm font-medium text-gray-600">
                 +{hiddenCount}
               </div>
             )}
           </div>
-          
+
           <div className="text-sm">
             <span className="text-gray-500">Desired Salary: </span>
             <span className="font-bold text-gray-900">$5,000</span>
